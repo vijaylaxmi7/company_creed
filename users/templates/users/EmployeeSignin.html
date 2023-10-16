@@ -1,18 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Signin</title>
-</head>
-<body>
-        <h1>Employee Signin</h1>
-    <form action=""  method="POST">
-        {% csrf_token %}
-        {{ form.as_p}}
-        <input type="submit" value="Submit">
-        <a href="/core/password_reset/"> Forgot Password</a>
-    </form>
-    
-</body>
-</html>
+{% extends "users/base.html" %}
+
+{% block title %}Employee Signin{% endblock %}
+
+{% block content %}
+<h1>Employee Signin</h1>
+
+<form action="" method="POST">
+    {% csrf_token %}
+
+    {%if messages %}
+    {%for message in messages%}
+    <div class="alert">
+        {{message}}
+    </div>
+    {%endfor%}
+    {%endif%}
+
+    {{ form.as_p}}
+
+    <input type="submit" value="Submit">
+    <a href="http://127.0.0.1:8000/forget_password/"> Forgot Password</a>
+</form>
+
+
+{% endblock %}

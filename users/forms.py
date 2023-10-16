@@ -25,6 +25,11 @@ class SendMailForm(forms.Form):
     message : forms.Textarea()
 
 
+class ResetPasswordForm(forms.Form):
+    oldPassword  = forms.CharField()
+    newPassword  = forms.CharField()
+
+
 class ChangePasswordForm(forms.Form):
     newPassword = forms.CharField()
     confirmPassword = forms.CharField()
@@ -33,9 +38,7 @@ class ForgetPasswordForm(forms.Form):
 
     email = forms.EmailField()
 
-class ResetPasswordForm(forms.Form):
-    oldPassword  = forms.CharField()
-    newPassword  = forms.CharField()
+
 
 
 

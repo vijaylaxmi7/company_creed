@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 
 from django.core.mail import EmailMessage, get_connection, send_mail
+from django.db.models import Q
+
 from django.contrib.auth import update_session_auth_hash
 import uuid
 from django.conf import settings
@@ -36,6 +38,7 @@ class EmployeeSignupForm(View):
         if form.is_valid():
             form.save()
             messages.success(request, "Signup Successful!")
+            return HttpResponseRedirect('/signin/')
         
         return render(request, self.template_name, {'form':form})
     
@@ -58,25 +61,26 @@ class EmployeeSignin(View):
             )
             if user is not None:
                 login(request, user)
-                messages.success(request, "Signin Successful!")
-                return HttpResponse("signedin")
+                # messages.success(request, "Signin Successful!")
+                return HttpResponseRedirect('/index/')
+            else :
+                return HttpResponse("not authenticate")
             
             return render(request, self.template_name, context={'form': form})
                 
         message = 'Login failed!'
         return render(request, self.template_name, context={'form': form, 'message': message})
-    
 
 
-# def success(self):
-#         messages.success(self.request, 'logged in')
-#         return reverse('EmployeeSignin')
+
+def index(request):
+    return render(request, "users/index.html")
     
 
 def Logout(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
-    return HttpResponse("logged out")
+    return HttpResponseRedirect("/signin/")
 
 
 def SendMail(request):
@@ -130,25 +134,53 @@ def changePassword(request, token):
     return render(request, 'users/change_password.html', context={'form': form})
 
 
+# def ForgetPassword(request):
+
+#     form = ForgetPasswordForm
+#     print('hi')
+
+#     if request.method == 'POST':
+#             form = form(request.POST)
+#             if form.is_valid():
+#                 email = form.cleaned_data['email']
+
+#                 if not User.objects.filter(email = email).first():
+#                     messages.success(request, 'Not user found with this username.')
+#                     return redirect('/forget-password/')
+                
+#                 user_obj = User.objects.get(email = email)
+#                 token = str(uuid.uuid4())
+
+#                 send_forget_password_mail(user_obj, token)
+#                 messages.success(request, 'An email is sent.')
+#                 return redirect('/forget-password/')
+#     return render(request, 'users/forget_password.html', context={'form': form})
+
+
+
+
+
 def ForgetPassword(request):
 
     form = ForgetPasswordForm
 
+
     if request.method == 'POST':
             form = form(request.POST)
             if form.is_valid():
-                email = form.cleaned_data['email']
+                data = form.cleaned_data['email']
+                associated_users = User.objects.filter(Q(email=data))
 
-            if not User.objects.filter(email = email).first():
-                messages.success(request, 'Not user found with this username.')
+                if not associated_users.exists():
+                    messages.success(request, 'Not user found with this username.')
+                    return redirect('/forget-password/')
+                
+                user_obj = User.objects.get(email = data)
+                token = str(uuid.uuid4())
+
+                send_forget_password_mail(user_obj, token)
+                messages.success(request, 'An email is sent.')
                 return redirect('/forget-password/')
-            
-            user_obj = User.objects.get(email = email)
-            token = str(uuid.uuid4())
-
-            send_forget_password_mail(user_obj, token)
-            messages.success(request, 'An email is sent.')
-            return redirect('/forget-password/')
     return render(request, 'users/forget_password.html', context={'form': form})
 
 
