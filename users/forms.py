@@ -1,0 +1,41 @@
+from django.forms import ModelForm
+from .models import Employee
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+
+class EmployeeSignupForm(UserCreationForm):
+
+    class Meta:
+        model = Employee
+        fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state', 'is_manager', 'technology', 'designation', 'year_of_experience', 'joining_date', 'id_proof' , 'id_proof_file']
+        exclude = ['']
+        # fields = "__all__"
+
+
+class EmployeeSigninForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField()
+
+
+
+class SendMailForm(forms.Form):
+
+    email : forms.EmailField()
+    subject : forms.CharField(max_length=200)
+    message : forms.Textarea()
+
+
+class ChangePasswordForm(forms.Form):
+    newPassword = forms.CharField()
+    confirmPassword = forms.CharField()
+
+class ForgetPasswordForm(forms.Form):
+
+    email = forms.EmailField()
+
+class ResetPasswordForm(forms.Form):
+    oldPassword  = forms.CharField()
+    newPassword  = forms.CharField()
+
+
+

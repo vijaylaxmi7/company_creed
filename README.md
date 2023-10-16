@@ -1,0 +1,1 @@
+The Company Creed is a web-based application designed to streamline and manage various office tasks such as leave management, task assignments, call assignments, daily status reporting, salary slip generation, and user registration, login, and password reset functionality and salary disbursement.
