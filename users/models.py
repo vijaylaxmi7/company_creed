@@ -50,16 +50,19 @@ class Technology(models.Model):
         return self.technologies
 
 class Employee(CustomUser):
+    ID_PROOF_CHOICE = [
+        ('ADHAR CARD', 'Adhar Card'),
+        ('PAN CARD', 'Pan Card'),
+        ('DRIVING LICENSE','Driving License')
+        ]
+    
     is_manager = models.BooleanField(default=False)
     technology = models.ManyToManyField(Technology)
     designation = models.ForeignKey(Designation, null=True, on_delete=models.SET_NULL)
     year_of_experience = models.IntegerField(default=0)
     joining_date = models.DateField()
-    ID_PROOF_CHOICE = [('ADHAR CARD', 'Adhar Card'),('PAN CARD', 'Pan Card'),('DRIVING LICENSE', 'Driving License')]
     id_proof = models.CharField(max_length=50, choices=ID_PROOF_CHOICE, null=True)
     id_proof_file = models.FileField(upload_to='documents/', null=True)
-    
-
 
 
 

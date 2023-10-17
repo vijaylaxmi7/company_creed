@@ -72,9 +72,6 @@ class EmployeeSignin(View):
         return render(request, self.template_name, context={'form': form, 'message': message})
 
 
-
-def index(request):
-    return render(request, "users/index.html")
     
 
 def Logout(request):
@@ -160,28 +157,36 @@ def changePassword(request, token):
 
 
 
-def ForgetPassword(request):
+# def ForgetPassword(request):
 
-    form = ForgetPasswordForm
+#     form = ForgetPasswordForm
 
 
-    if request.method == 'POST':
-            form = form(request.POST)
-            if form.is_valid():
-                data = form.cleaned_data['email']
-                associated_users = User.objects.filter(Q(email=data))
+#     if request.method == 'POST':
+#             form = form(request.POST)
+#             if form.is_valid():
+#                 data = form.cleaned_data['email']
+#                 associated_users = User.objects.filter(Q(email=data))
 
-                if not associated_users.exists():
-                    messages.success(request, 'Not user found with this username.')
-                    return redirect('/forget-password/')
+#                 if not associated_users.exists():
+#                     messages.success(request, 'Not user found with this username.')
+#                     return redirect('/forget-password/')
                 
-                user_obj = User.objects.get(email = data)
-                token = str(uuid.uuid4())
+#                 user_obj = User.objects.get(email = data)
+#                 token = str(uuid.uuid4())
 
-                send_forget_password_mail(user_obj, token)
-                messages.success(request, 'An email is sent.')
-                return redirect('/forget-password/')
-    return render(request, 'users/forget_password.html', context={'form': form})
+#                 send_forget_password_mail(user_obj, token)
+#                 messages.success(request, 'An email is sent.')
+#                 return redirect('/forget-password/')
+#     return render(request, 'users/forget_password.html', context={'form': form})
+
+
+
+def index(request):
+    return render(request, "users/index.html")
+
+
+
 
 
 
