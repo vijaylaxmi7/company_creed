@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Signup Form</title>
+    <title>Edit Profile</title>
 
+<style>
 
-    <style>
-
-        :root {
+:root {
             --background: #1a1a2e;
             /* --color: #ffffff; */
             --primary-color: #0f3460;
@@ -225,39 +224,37 @@
                 -o-transform: scale(1);
             }
         }
-        
-        
-        </style>
+       
+
+</style>
 
 
 </head>
 <body>
 
 
-<section class="container">
-    <div class="login-container">
 
-        <div class="form-container">
-            <h1 class="opacity"> Employee Signup</h1>
-
-            <form action="" enctype="multipart/form-data" method="POST">
-                {% csrf_token %}
-                {{ form.as_p}}
+    <section class="container">
+        <div class="login-container">
+    
+            <div class="form-container">
+                <h1 class="opacity"> EDIT PROFILE</h1>
+    
+                <form action="" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p}}
+                    
+                    <button class="opacity">UPDATE</button>
+                </form>
+    
+               
                 
-                <input type="submit" value="Submit">
-            </form>
-
-           
-            
-        </div>
-        </div>
-        </section>
+            </div>
+            </div>
+            </section>
 
 
-
-
-
-    <h1></h1>
-   
+    
+    
 </body>
 </html>

@@ -61,7 +61,7 @@ ROOT_URLCONF = 'company_creed.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'users', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,3 +145,7 @@ EMAIL_PORT = 587
 # EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'vijaylaxmi.borasi@codiatic.com'
 EMAIL_HOST_PASSWORD = 'gvcg jbxo tvzl hlej'
+
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'users/static'),]
+

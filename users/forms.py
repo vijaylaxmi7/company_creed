@@ -13,8 +13,8 @@ class EmployeeSignupForm(UserCreationForm):
 
 
 class EmployeeSigninForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField()
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'custom-input'}))
+    password = forms.CharField(widget=forms.TextInput(attrs={'class': 'custom-input'}))
 
 
 
@@ -37,6 +37,15 @@ class ChangePasswordForm(forms.Form):
 class ForgetPasswordForm(forms.Form):
 
     email = forms.EmailField()
+
+class UpdateProfileForm(forms.Form):
+
+    class Meta:
+        model = Employee
+        fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state', 'is_manager', 'technology', 'designation', 'year_of_experience', 'joining_date', 'id_proof' , 'id_proof_file']
+        exclude = ['']
+
+    
 
 
 

@@ -7,6 +7,8 @@ from django.contrib.auth.models  import AbstractUser
 from datetime import date
 from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
+from django.utils.text import slugify
+
 
 class CustomUser(AbstractUser):
 
@@ -18,8 +20,8 @@ class CustomUser(AbstractUser):
     ]
 
     username = None
-    groups = None
-    user_permissions = None
+    #groups = None
+    #user_permissions = None
     email = models.EmailField(_('email_address'), unique=True)
     gender = models.CharField(max_length=20, choices= GENDER_CHOICE)
     contact_no = models.CharField(max_length=15)

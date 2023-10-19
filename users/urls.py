@@ -24,5 +24,6 @@ urlpatterns = [
 
     # path('reset_password/', views.resetPasswordView.as_view(), name= "reset_password"),
     # path('change_password/<token>/', views.changePassword, name= "change_password"),
-    # path('forget_password/', views.ForgetPassword, name='forget_password')
+    # path('forget_password/', views.ForgetPassword, name='forget_password'),
+    path('edit-profile/<int:pk>/', views.EditProfileView.as_view(), name= "edit_profile"),
 ]

@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 from django.views.generic.edit import FormView
-from users.forms import EmployeeSignupForm, EmployeeSigninForm, ResetPasswordForm, ForgetPasswordForm, ChangePasswordForm
+from users.forms import EmployeeSignupForm, EmployeeSigninForm, ResetPasswordForm, ForgetPasswordForm, ChangePasswordForm, UpdateProfileForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 
@@ -19,9 +19,25 @@ from .helpers import send_forget_password_mail
 from django.contrib.auth import get_user_model
 User = get_user_model
 
+from users.models import Employee
+from django.views.generic.edit import UpdateView
+from django.urls import reverse_lazy
+
 
 
 # Create your views here.
+
+class EditProfileView(UpdateView):
+
+    model = Employee
+    
+    fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state', 'is_manager', 'technology', 'designation', 'year_of_experience', 'joining_date', 'id_proof' , 'id_proof_file']
+    template_name ="users/editProfile.html"
+    success_url = reverse_lazy('index')
+
+
+def index(request):
+    return render(request, "users/index.html")
 
 
 class EmployeeSignupForm(View):
@@ -182,8 +198,16 @@ def changePassword(request, token):
 
 
 
-def index(request):
-    return render(request, "users/index.html")
+
+
+
+# class EditProfile(View):
+
+#     def get(self, request):
+
+
+
+    
 
 
 
@@ -213,5 +237,3 @@ def index(request):
 
 
 
-
-   
