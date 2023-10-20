@@ -7,7 +7,8 @@ from django.views.generic.base import TemplateView
 
 urlpatterns = [
 
-    path('task-assignment/', views.taskAssignment.as_view(), name='task-assignment')
+    path('task-assignment/', views.taskAssignment.as_view(), name='task-assignment'),
+    path('send-task/', views.SendTask, name='send task' )
 ]
 
 

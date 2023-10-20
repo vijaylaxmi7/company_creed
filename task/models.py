@@ -23,5 +23,9 @@ class Task(models.Model):
     description = models.TextField()
     start_date = models.DateField()
     estimate_date = models.DateField()
-    file_attachment = models.FileField() 
+    file_attachment = models.FileField(upload_to='documents/', null=True) 
+
+    def __str__(self):
+
+        return self.task
     
