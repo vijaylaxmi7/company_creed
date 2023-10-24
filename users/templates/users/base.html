@@ -1,19 +1,227 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
+
 <head>
-    <link rel="stylesheet" href="style.css">
-    <title>{% block title %}My amazing site{% endblock %}</title>
+  <title>{% block title %}Company Creed{% endblock %}</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/index.css'%}">
+
 </head>
 
 <body>
-    <div id="sidebar">
-        {% block sidebar %}
-       
-        {% endblock %}
-    </div>
 
-    <div id="content">
-        {% block content %}{% endblock %}
+  <header></header>
+
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+
+        <img src="{% static '/images/cc3.png' %}" alt="My image">
+        <!-- <a class="navbar-brand" href="#">Company Creed</a> -->
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+        </ul>
+
+
+        <ul class="nav navbar-nav navbar-right">
+
+
+
+          
+          <div class="dropdown">
+            <a href="http://127.0.0.1:8000/index/"><button onmouseenter="dashboardFunction()" class="dropbtn"><span
+                class="glyphicon glyphicon-dashboard"></span>Dashboard</button></a>
+          </div>
+
+
+
+          <div class="dropdown">
+            <button onmouseenter="attendanceFunction()" class="dropbtn"><span
+                class="glyphicon glyphicon-check"></span>Attendance</button>
+            <div id="myDropdown" class="dropdown-content">
+              <a href="#">Send Status</a>
+              <a hr ef="#">Apply Leaves</a>
+              <a href="#">My Leaves</a>
+              <a href="#">Check-in/ Check-out</a>
+            </div>
+          </div>
+
+          <div class="dropdown">
+            <button onmouseenter="taskFunction()" class="dropbtn"><span class="glyphicon glyphicon-tasks"></span>Task/
+              Call</button>
+            {% if request.user.employee.is_manager %}
+            <div id="taskDropdown" class="dropdown-content">
+              <a href="#">Assign calls</a>
+              <a href="http://127.0.0.1:8000/task/task-assignment/">Assign tasks</a>
+              <a href="http://127.0.0.1:8000/task/view-task/">View assigned Task</a>
+              <a href="#">View calls</a>
+              <a href="#">View tasks</a>
+            </div>
+            {%else%}
+            <div id="taskDropdown" class="dropdown-content">
+              <a href="#">View calls</a>
+              <a href="{% url 'my-task' user.employee.pk %}">View tasks</a>
+            </div>
+            {%endif%}
+          </div>
+
+
+
+          <!-- {%if request.user.employee.is_manager%}
+          <div class="dropdown">
+            <button onmouseenter="attendanceFunction()" class="dropbtn"><span
+                class="glyphicon glyphicon-user"></span>Employee List</button>
+            <div id="myDropdown" class="dropdown-content">
+              <a href="#">Send Status</a>
+              <a href="#">Apply Leaves</a>
+              <a href="#">My Leaves</a>
+              <a href="#">Check-in/ Check-out</a>
+            </div>
+          </div>
+          {%endif%}--->
+
+
+
+
+          <!-- {%if request.user.employee.is_manager%}
+          <div class="dropdown">
+            <button onmouseenter="attendanceFunction()" class="dropbtn">Employee Status</button>
+            <div id="myDropdown1" class="dropdown-content">
+              <a href="#">Send Status</a>
+              <a href="#">Apply Leaves</a>
+              <a href="#">My Leaves</a>
+              <a href="#">Check-in/ Check-out</a>
+            </div>
+          </div>
+    
+          {%endif%} -->
+
+
+          {% comment %} {%if request.user.employee.is_manager%}
+          <div class="dropdown">
+            <button onmouseenter="leaveFunction()" class="dropbtn"><span
+                class="glyphicon glyphicon-list-alt"></span>Manage Leave Application</button>
+            <div id="myDropdown" class="dropdown-content">
+              <a href="#">Send Status</a>
+              <a href="#">Apply Leaves</a>
+              <a href="#">My Leaves</a>
+              <a href="#">Check-in/ Check-out</a>
+            </div>
+          </div>
+
+          {%endif%} {% endcomment %}
+
+
+          <div class="dropdown">
+            <button onmouseenter="profileFunction()" class="dropbtn">{{request.user.employee.first_name}}
+              {{request.user.employee.last_name}}</span><span
+                class="glyphicon glyphicon-triangle-bottom"></span></button>
+            <div id="myDropdown1" class="dropdown-content">
+              <a href="{% url 'edit_profile' user.employee.pk %}">Edit Profile</a>
+              <a href="#">Change status</a>
+              <a href="#">View Salary slip</a>
+              <li><a href="/password_reset/"><span class=""></span>Reset password</a></li>
+              <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
+              </li>
+
+            </div>
+          </div>
+        </ul>
+      </div>
     </div>
+  </nav>
+
+
+  <!-- {%block main%}
+    <main></main>
+    {%endblock main%} -->
+
+
+    {% block signin %}{% endblock signin %}
+
+
+
+
+  <footer class="container-fluid text-center">
+    <p>&copy; Copyright by Company Creed</p>
+  </footer>
+
+
+
+  <script>
+    function attendanceFunction() {
+      document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function (event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+
+    function profileFunction() {
+      document.getElementById("myDropdown1").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function (event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+
+    function taskFunction() {
+      document.getElementById("taskDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function (event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+  </script>
+
+
+
 </body>
+
 </html>

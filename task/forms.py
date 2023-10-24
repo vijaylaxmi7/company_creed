@@ -19,17 +19,24 @@ class TaskAssignmentForm(forms.ModelForm):
     class Meta:
         model = Task
         labels = {
+            'employee' : 'Assigned to'
+        }
+        fields = ['task', 'employee', 'project', 'start_date', 'estimate_date', 'description', 'file_attachment']
+        # exlude = ['manager']
+        
+
+class EmployeeTaskForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Task
+        labels = {
             'employee' : 'Assigned to',
             'manager' : 'Assigned by'
         }
         fields = ['task', 'employee','manager', 'project', 'start_date', 'estimate_date', 'description', 'file_attachment']
         # exlude = ['manager']
-        
 
-class EmployeeTaskForm(forms.Form):
-
-    task = forms.CharField(max_length=50)
-        
 
     
 

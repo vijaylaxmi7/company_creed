@@ -10,7 +10,7 @@ urlpatterns = [
     path("signup/", views.EmployeeSignupForm.as_view(), name="user signup form"),
     path('signin/',views.EmployeeSignin.as_view(), name='user signin form'),
     path('logout/', views.Logout, name = 'logout'),
-    path('send_mail/', views.SendMail, name='send mail'),
+    # path('send_mail/', views.SendMail, name='send mail'),
     path('index/', views.index, name =  'index'),
     path('change_password/', auth_views.PasswordChangeView.as_view(), name='change_password'),
     path('change_password_done/', auth_views.PasswordChangeDoneView.as_view(), name='change_password_done'),
@@ -26,4 +26,6 @@ urlpatterns = [
     # path('change_password/<token>/', views.changePassword, name= "change_password"),
     # path('forget_password/', views.ForgetPassword, name='forget_password'),
     path('edit-profile/<int:pk>/', views.EditProfileView.as_view(), name= "edit_profile"),
+    path('my-task/', views.myTask, name="my-task")
+
 ]

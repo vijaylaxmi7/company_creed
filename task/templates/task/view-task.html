@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Task</title>
+
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        h1{
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+        }
+
+        table{
+            width: 80%;
+            margin: 20px auto;
+            border-color: #fff;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        table td{
+            padding: 8px;
+        }
+
+        table tr:nth-child(even){
+            background-color: #f2f2f2;
+        }
+
+    </style>
+
+</head>
+<body>
+    <h1>My Tasks</h1>
+    <!-- {% for task in task %}
+
+    {{task.task}}
+    <br><br>
+    {{task.description}}
+    <br><br>
+    {% endfor %} -->
+
+    <!-- <ul> 
+    
+        {% for object in object_list %} 
+        
+        <li>{{ object.task }}</li> 
+        <li>{{ object.description }}</li> 
+        <hr/> 
+        {% empty %} 
+        <li>No objects yet.</li> 
+        {% endfor %} 
+    </ul> -->
+    <!-- <thead>
+        <tr>
+          {% for object in object_list %}
+          <th><li>{{ object.task }}</li> 
+            <li>{{ object.description }}</li> </th>
+          {% endfor %}
+        </tr>
+      </thead> -->
+
+      <table>
+        <thead>
+        <tr>
+          <th>Task</th>
+          <th>Assigned by</th>
+          <th>Project</th>
+          <th>Start date</th>
+          <th>Estimate date</th>
+          {% comment %} <th>Description</th> {% endcomment %}
+          <th>Attachment</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for object in object_list %} 
+        <tr>
+          <td>{{ object.task }}</td>
+          <td>{{ object.manager.first_name}}</td>
+          <td>{{ object.project }}</td>
+          <td>{{ object.start_date }}</td>
+          <td>{{ object.estimate_date}}</td>
+          {% comment %} <td>{{ object.description }}</td> {% endcomment %}
+          <td>{{ object.file_attachment}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+      </table>
+    
+
+
+</body>
+</html>

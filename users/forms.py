@@ -7,9 +7,10 @@ class EmployeeSignupForm(UserCreationForm):
 
     class Meta:
         model = Employee
-        fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state', 'is_manager', 'technology', 'designation', 'year_of_experience', 'joining_date', 'id_proof' , 'id_proof_file']
+        fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state',   'id_proof' , 'id_proof_file']
         exclude = ['']
         # fields = "__all__"
+
 
 
 class EmployeeSigninForm(forms.Form):
@@ -42,7 +43,7 @@ class UpdateProfileForm(forms.Form):
 
     class Meta:
         model = Employee
-        fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state', 'is_manager', 'technology', 'designation', 'year_of_experience', 'joining_date', 'id_proof' , 'id_proof_file']
+        fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state',  'technology',  'id_proof' , 'id_proof_file']
         exclude = ['']
 
     

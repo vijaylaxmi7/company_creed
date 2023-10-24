@@ -19,25 +19,46 @@ from .helpers import send_forget_password_mail
 from django.contrib.auth import get_user_model
 User = get_user_model
 
-from users.models import Employee
+from users.models import Employee, CustomUser
 from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
+from task.models import Task
+import datetime
 
 
 
 # Create your views here.
 
+
+
+def myTask(request):
+
+
+    # current_user = request.user.id
+
+    # task = Task.objects.all().filter(user = current_user)
+    task = Task.objects.filter(employee = request.user.employee)
+
+    context = {'task' : task}
+
+    return render(request, 'users/my-task.html', context=context)
+
+
+
 class EditProfileView(UpdateView):
 
     model = Employee
     
-    fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state', 'is_manager', 'technology', 'designation', 'year_of_experience', 'joining_date', 'id_proof' , 'id_proof_file']
+    fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state','id_proof' , 'id_proof_file']
     template_name ="users/editProfile.html"
     success_url = reverse_lazy('index')
 
 
 def index(request):
-    return render(request, "users/index.html")
+    today = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
+    context = {'today': today}
+    
+    return render(request, "users/index.html", context)
 
 
 class EmployeeSignupForm(View):
@@ -96,24 +117,24 @@ def Logout(request):
     return HttpResponseRedirect("/signin/")
 
 
-def SendMail(request):
+# def SendMail(request):
 
-    if request.method == 'POST':
-        with get_connection(
-            host = settings.EMAIL_HOST,
-            port = settings.EMAIL_PORT,
-            username = settings.EMAIL_HOST_USER,
-            password = settings.EMAIL_HOST_PASSWORD,
-            use_tls = settings.EMAIL_USE_TLS
+#     if request.method == 'POST':
+#         with get_connection(
+#             host = settings.EMAIL_HOST,
+#             port = settings.EMAIL_PORT,
+#             username = settings.EMAIL_HOST_USER,
+#             password = settings.EMAIL_HOST_PASSWORD,
+#             use_tls = settings.EMAIL_USE_TLS
 
-        )as connection:
-            subject = request.POST.get("subject")
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [request.POST.get("email"),]
-            message = request.POST.get("message")
-            EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()
+#         )as connection:
+#             subject = request.POST.get("subject")
+#             email_from = settings.EMAIL_HOST_USER
+#             recipient_list = [request.POST.get("email"),]
+#             message = request.POST.get("message")
+#             EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()
 
-    return render(request, 'users/sendMail.html')
+#     return render(request, 'users/sendMail.html')
 
 
 
