@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Delete Task</h1>
-    <form action="" enctype="multipart/form-data"  method="post">
+    <form action=""   method="post">
         {% csrf_token %}
         {{form.as_p}}
         <button class="opacity">Delete</button>

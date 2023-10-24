@@ -23,7 +23,7 @@ from django.conf import settings
 
 class taskDescription(DetailView):
     model = Task
-    
+
 
 def myTask(request):
 
@@ -37,12 +37,14 @@ class updateTask(UpdateView):
     fields = ['task', 'employee', 'project', 'start_date', 'estimate_date', 'description', 'file_attachment']
     template_name = 'task/updateTask.html'
     success_url = reverse_lazy('view-task')
-
+    print("dfghj")
+    
 
 class deleteTask(DeleteView):
     model =Task
     template_name = 'task/delete-task.html'
     success_url = reverse_lazy("view-task")
+    
 
 # def delete_task(request, pk):
 #     task = Task.objects.get(id=pk)
