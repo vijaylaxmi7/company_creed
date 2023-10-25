@@ -12,6 +12,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/index.css'%}">
+  
 
 </head>
 
@@ -28,8 +29,8 @@
           <span class="icon-bar"></span>
         </button>
 
-        <img src="{% static '/images/cc3.png' %}" alt="My image">
-        <!-- <a class="navbar-brand" href="#">Company Creed</a> -->
+        {% comment %} <img src="{% static '/images/logo.jpg' %}" alt="My image"> {% endcomment %}
+        <a class="navbar-brand" href="#">Company Creed</a>
       </div>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="nav navbar-nav">
@@ -68,12 +69,12 @@
               <a href="http://127.0.0.1:8000/task/task-assignment/">Assign tasks</a>
               <a href="http://127.0.0.1:8000/task/view-task/">View assigned Task</a>
               <a href="#">View calls</a>
-              <a href="#">View tasks</a>
+              <a href="{% url 'my-task'  %}">View tasks</a>
             </div>
             {%else%}
             <div id="taskDropdown" class="dropdown-content">
               <a href="#">View calls</a>
-              <a href="{% url 'my-task' user.employee.pk %}">View tasks</a>
+              <a href="{% url 'my-task'  %}">View tasks</a>
             </div>
             {%endif%}
           </div>
@@ -130,7 +131,7 @@
               {{request.user.employee.last_name}}</span><span
                 class="glyphicon glyphicon-triangle-bottom"></span></button>
             <div id="myDropdown1" class="dropdown-content">
-              <a href="{% url 'edit_profile' user.employee.pk %}">Edit Profile</a>
+              {% comment %} <a href="{% url 'edit_profile' user.employee.pk %}">Edit Profile</a> {% endcomment %}
               <a href="#">Change status</a>
               <a href="#">View Salary slip</a>
               <li><a href="/password_reset/"><span class=""></span>Reset password</a></li>
@@ -151,13 +152,14 @@
 
 
     {% block signin %}{% endblock signin %}
+    {% block task %}{% endblock task %}
 
 
 
 
-  <footer class="container-fluid text-center">
+  {% comment %} <footer class="container-fluid text-center">
     <p>&copy; Copyright by Company Creed</p>
-  </footer>
+  </footer> {% endcomment %}
 
 
 

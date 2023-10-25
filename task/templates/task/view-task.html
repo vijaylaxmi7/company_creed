@@ -1,44 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Task</title>
+{%extends 'users/base.html'%}
+ {% load static %}
+ {% block task %}
 
-    <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-
-        h1{
-            text-align: center;
-            background-color: #333;
-            color: #fff;
-            padding: 10px;
-        }
-
-        table{
-            width: 80%;
-            margin: 20px auto;
-            border-color: #fff;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        table td{
-            padding: 8px;
-        }
-
-        table tr:nth-child(even){
-            background-color: #f2f2f2;
-        }
-
-    </style>
-
-</head>
-<body>
+  <link rel="stylesheet" href="{% static 'css/task.css'%}">
     <h1>Assigned Tasks</h1>
      {% comment %} {% for task in object_list %}
 
@@ -105,7 +69,5 @@
     </tbody>
       </table> {% endcomment %}
     
+      {% endblock task %}
 
-
-</body>
-</html>

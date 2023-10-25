@@ -1,7 +1,7 @@
 :root {
-    --background: #c6c6ea;
+    /* --background: #c6c6ea;
     --color: #ffffff;
-    --primary-color: #93baea;
+    --primary-color: #93baea; */
   }
 
 
@@ -128,7 +128,8 @@
   }
 
 
-  img {
-    width: 17%;
-    height: ;
-  }
+img{
+  width: 100%;
+  /* height: fit-content; */
+
+}

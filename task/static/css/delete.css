@@ -1,0 +1,26 @@
+* {box-sizing: border-box}
+
+button {
+    background-color: #04AA6D;
+    color: black;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: solid;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+    float: left;
+   width: 10%;
+   background-color: whitesmoke;
+  }
+
+  .container {
+    padding: 16px;
+    text-align: center;
+  }
+
+  hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+  }
+  

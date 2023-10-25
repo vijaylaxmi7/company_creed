@@ -36,7 +36,7 @@ def myTask(request):
 
     # current_user = request.user.id
 
-    # task = Task.objects.all().filter(user = current_user)
+    # task = Task.objects.filter(user = current_user)
     task = Task.objects.filter(employee = request.user.employee)
 
     context = {'task' : task}
