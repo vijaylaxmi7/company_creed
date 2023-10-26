@@ -1,9 +1,13 @@
 {%extends 'users/base.html'%}
  {% load static %}
  {% block signin %}
+ {%block welcome%}{%endblock welcome%}
  <link rel="stylesheet" href="{% static 'css/signup.css'%}">
- 
 
+ <style>
+    
+ </style>
+ 
 <section class="container">
     <div class="login-container">
 
@@ -16,9 +20,6 @@
                 
                 <button class="opacity">SUBMIT</button>
             </form>
-
-           
-            
         </div>
         </div>
         </section>
@@ -37,43 +38,8 @@
 
 
 
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Signup Form</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'users/signup.css'%}">
-
-</head>
-<body>
-
-
-<section class="container">
-    <div class="login-container">
-
-        <div class="form-container">
-            <h1 class="opacity"> Employee Signup</h1>
-
-            <form action="" enctype="multipart/form-data" method="POST">
-                {% csrf_token %}
-                {{ form.as_p}}
-                
-                <input type="submit" value="Submit">
-            </form>
-
-           
-            
-        </div>
-        </div>
-        </section>
 
 
 
 
-
-    <h1></h1>
    
-</body>
-</html> {% endcomment %}

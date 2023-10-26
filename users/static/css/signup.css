@@ -1,4 +1,4 @@
-:root {
+/* :root {
     --background: #1a1a2e;
     --color: #ffffff;
     --primary-color: #0f3460;
@@ -6,7 +6,7 @@
 
 * {
     box-sizing: border-box;
-}
+} */
 
 html {
     scroll-behavior: smooth;
@@ -226,7 +226,7 @@ textarea:focus, input:focus {
     color: #ff0000;
 }
 
-input{
+input, textarea{
     color: #000;
 }
 

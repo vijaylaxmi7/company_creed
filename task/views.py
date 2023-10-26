@@ -13,6 +13,7 @@ from .models import Task
 from users.models import Employee, CustomUser
 from users.views import index
 from django.urls import reverse_lazy, reverse
+from django.shortcuts import redirect
 
 from django.core.mail import EmailMessage, get_connection, send_mail
 from django.template import Context, Template, RequestContext
@@ -20,6 +21,9 @@ from django.template import Context, Template, RequestContext
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.conf import settings
+import uuid
+
+from users.helpers import send_task_email
 
 # Create your views here.
 
@@ -29,7 +33,7 @@ class updateTask(UpdateView):
     fields = ['task', 'employee', 'project', 'start_date', 'estimate_date', 'description', 'file_attachment']
     template_name = 'task/updateTask.html'
     success_url = reverse_lazy('view-task')
-    print("dfghj")
+    
     
 
 class deleteTask(DeleteView):
@@ -45,28 +49,6 @@ class viewTask(ListView):
 
 
 
-
-# class TaskAssignment(View):
-    
-#     form = TaskAssignmentForm
-#     template_name = 'task/taskAssignment.html'
-
-#     def get(self, request):
-
-#        return render(request, self.template_name, {'form': self.form})
-    
-#     def post(self, request):
-
-#         form = TaskAssignmentForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             # task = form.save(commit=False)
-#             form.save()
-#             return HttpResponseRedirect('/index/')
-#         return render(request, self.template_name, {'form' : form})
-
-
-
-
 class TaskAssignment(View):
 
     form = TaskAssignmentForm
@@ -75,7 +57,7 @@ class TaskAssignment(View):
     def get(self, request):
 
         return render(request, self.template_name, {'form': self.form})
-    
+        
     def post(self, request):
 
         form = self.form(request.POST, request.FILES)
@@ -87,24 +69,15 @@ class TaskAssignment(View):
             password = settings.EMAIL_HOST_PASSWORD,
             use_tls = settings.EMAIL_USE_TLS
 
-        )as connection:
-                
+            )as connection:
+                    
                 task = form.cleaned_data['task']
-                description = form.cleaned_data['description']
-                employee = form.cleaned_data['employee']
-                email_from = settings.EMAIL_HOST_USER
-                html = render_to_string('task/taskAssignment.html', 
-                                      {'task' : task,
-                                       'description' : description
-                                        })     
-                # message = form.cleaned_data['description']      
-                recipient_list = [employee]
-                EmailMessage( task,  html,email_from, recipient_list,  connection=connection).send()
-            
-
+                email = form.cleaned_data['employee']            
+                token = str(uuid.uuid4())
                 form.save()
+                send_task_email(email, token, task)
             # messages.success(request, "Task Assigned!")
-            return render('index')
+            return HttpResponseRedirect('/view-task/')
         
         return render(request, self.template_name, {'form' : form})
 
@@ -129,6 +102,40 @@ class TaskAssignment(View):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class TaskAssignment(View):
+    
+#     form = TaskAssignmentForm
+#     template_name = 'task/taskAssignment.html'
+
+#     def get(self, request):
+
+#        return render(request, self.template_name, {'form': self.form})
+    
+#     def post(self, request):
+
+#         form = TaskAssignmentForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             # task = form.save(commit=False)
+#             form.save()
+#             return HttpResponseRedirect('/index/')
+#         return render(request, self.template_name, {'form' : form})
 
 
 

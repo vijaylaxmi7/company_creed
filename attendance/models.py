@@ -2,14 +2,10 @@ from django.db import models
 
 from users.models import Employee
 
-class EmployeeAttendance(models.Model):
+class Attendance(models.Model):
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    date = models.DateField()
-    total_working_days = models.IntegerField()
-    total_present_day = models.IntegerField()
-    
-    check_in_time = models.DateTimeField()
-    check_out_time = models.DateTimeField()
-    break_start = models.DateTimeField()
-    break_end = models.DateTimeField()
+    date = models.DateField(null=True)
+    checkInTime = models.DateTimeField()
+    checkOutTime = models.DateTimeField(blank=True, null=True)
+    totalHoursWorked = models.DateTimeField(null=True)

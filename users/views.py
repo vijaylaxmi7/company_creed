@@ -15,7 +15,7 @@ from django.db.models import Q
 from django.contrib.auth import update_session_auth_hash
 import uuid
 from django.conf import settings
-from .helpers import send_forget_password_mail
+# from .helpers import send_forget_password_mail
 from django.contrib.auth import get_user_model
 User = get_user_model
 
@@ -24,40 +24,32 @@ from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy
 from task.models import Task
 import datetime
-
+from django.utils import timezone
 
 
 # Create your views here.
 
 
-
 def myTask(request):
 
-
-    # current_user = request.user.id
-
-    # task = Task.objects.filter(user = current_user)
     task = Task.objects.filter(employee = request.user.employee)
-
     context = {'task' : task}
-
     return render(request, 'users/my-task.html', context=context)
-
 
 
 class EditProfileView(UpdateView):
 
     model = Employee
-    
     fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state','id_proof' , 'id_proof_file']
     template_name ="users/editProfile.html"
     success_url = reverse_lazy('index')
 
 
 def index(request):
-    today = datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y")
-    context = {'today': today}
-    
+
+    current_datetime = timezone.now().strftime("%I:%M%p on %B %d, %Y")
+    # current_datetime = timezone.localtime()
+    context = {'current_datetime': current_datetime}
     return render(request, "users/index.html", context)
 
 
@@ -109,63 +101,62 @@ class EmployeeSignin(View):
         return render(request, self.template_name, context={'form': form, 'message': message})
 
 
-    
-
 def Logout(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
     return HttpResponseRedirect("/signin/")
 
 
-# def SendMail(request):
-
-#     if request.method == 'POST':
-#         with get_connection(
-#             host = settings.EMAIL_HOST,
-#             port = settings.EMAIL_PORT,
-#             username = settings.EMAIL_HOST_USER,
-#             password = settings.EMAIL_HOST_PASSWORD,
-#             use_tls = settings.EMAIL_USE_TLS
-
-#         )as connection:
-#             subject = request.POST.get("subject")
-#             email_from = settings.EMAIL_HOST_USER
-#             recipient_list = [request.POST.get("email"),]
-#             message = request.POST.get("message")
-#             EmailMessage(subject, message, email_from, recipient_list, connection=connection).send()
-
-#     return render(request, 'users/sendMail.html')
 
 
 
-class resetPasswordView(View):
 
-    form = ResetPasswordForm
-    template_name = 'users/reset_password.html'
 
-    def get(self, request):
-        form = self.form()
-        return render(request, self.template_name, context={'form': form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class resetPasswordView(View):
+
+#     form = ResetPasswordForm
+#     template_name = 'users/reset_password.html'
+
+#     def get(self, request):
+#         form = self.form()
+#         return render(request, self.template_name, context={'form': form})
     
-    def post(self, request):
+#     def post(self, request):
         
-        if request.method == 'POST':
-            form = self.form(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)  # Important!
-            messages.success(request, 'Your password was successfully updated!')
-            return redirect('change_password')
-        else:
-            messages.error(request, 'Please correct the error below.')
+#         if request.method == 'POST':
+#             form = self.form(request.user, request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             update_session_auth_hash(request, user)  
+#             messages.success(request, 'Your password was successfully updated!')
+#             return redirect('change_password')
+#         else:
+#             messages.error(request, 'Please correct the error below.')
 
-        return render(request, self.template_name, {'form': form})
+#         return render(request, self.template_name, {'form': form})
 
 
-def changePassword(request, token):
-    form = ChangePasswordForm
-    obj = User.objects.get(token)
-    return render(request, 'users/change_password.html', context={'form': form})
+# def changePassword(request, token):
+#     form = ChangePasswordForm
+#     obj = User.objects.get(token)
+#     return render(request, 'users/change_password.html', context={'form': form})
 
 
 # def ForgetPassword(request):

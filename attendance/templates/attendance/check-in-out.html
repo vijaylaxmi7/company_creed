@@ -1,0 +1,33 @@
+{%extends 'users/base.html'%}
+{% load static %}
+{% block task %}
+<link rel="stylesheet" href="{% static 'css/my-task.css'%}">
+
+{%block welcome%}{%endblock welcome%}
+
+    <h1>Check-In/Out Status</h1>
+    
+      <table>
+        <thead>
+        <tr>
+          <th>Employee</th>
+          <th>Check-in time</th>
+          <th>Check-out time</th>
+          <th>Date</th>
+        
+        </tr>
+    </thead>
+    <tbody>
+        {% for object in object_list %} 
+        <tr>
+          <td>{{ object.employee.first_name }}</td>
+          <td>{{ object.checkInTime}}</td>
+          <td>{{ object.checkOutTime }}</td>
+          <td>{{ object.date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+      </table>
+    
+      {% endblock task %}
+

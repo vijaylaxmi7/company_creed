@@ -5,6 +5,30 @@
   }
 
 
+  /* Style for the container that holds the timestamp and welcome message */
+.timestamp-container {
+  text-align: center;
+  margin: 20px;
+  padding: 10px;
+  /* background-color: #f0f0f0; */
+  /* border: 1px solid #ccc; */
+  border-radius: 5px;
+}
+
+/* Style for the timestamp text */
+.timestamp-text {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Style for the welcome message */
+.welcome-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff;
+}
+
   .small{
     color: black;
   }
