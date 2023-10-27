@@ -59,10 +59,10 @@ class Employee(CustomUser):
         ]
     
     is_manager = models.BooleanField(default=False)
-    technology = models.ManyToManyField(Technology)
+    technology = models.ManyToManyField(Technology, null=True)
     designation = models.ForeignKey(Designation, null=True, on_delete=models.SET_NULL)
-    year_of_experience = models.IntegerField(default=0)
-    joining_date = models.DateField()
+    year_of_experience = models.IntegerField(default=0, null=True)
+    joining_date = models.DateField(null=True)
     id_proof = models.CharField(max_length=50, choices=ID_PROOF_CHOICE, null=True)
     id_proof_file = models.FileField(upload_to='documents/', null=True)
 

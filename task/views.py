@@ -62,22 +62,24 @@ class TaskAssignment(View):
 
         form = self.form(request.POST, request.FILES)
         if form.is_valid():
-            with get_connection(
-            host = settings.EMAIL_HOST,
-            port = settings.EMAIL_PORT,
-            username = settings.EMAIL_HOST_USER,
-            password = settings.EMAIL_HOST_PASSWORD,
-            use_tls = settings.EMAIL_USE_TLS
 
-            )as connection:
-                    
-                task = form.cleaned_data['task']
-                email = form.cleaned_data['employee']            
-                token = str(uuid.uuid4())
-                form.save()
-                send_task_email(email, token, task)
-            # messages.success(request, "Task Assigned!")
-            return HttpResponseRedirect('/view-task/')
+            if request.user.employee.is_manager:
+                with get_connection(
+                host = settings.EMAIL_HOST,
+                port = settings.EMAIL_PORT,
+                username = settings.EMAIL_HOST_USER,
+                password = settings.EMAIL_HOST_PASSWORD,
+                use_tls = settings.EMAIL_USE_TLS
+
+                )as connection:
+
+                    task = form.cleaned_data['task']
+                    email = form.cleaned_data['employee']            
+                    token = str(uuid.uuid4())
+                    form.save()
+                    send_task_email(email, token, task)
+                # messages.success(request, "Task Assigned!")
+                return HttpResponseRedirect('/index/')
         
         return render(request, self.template_name, {'form' : form})
 

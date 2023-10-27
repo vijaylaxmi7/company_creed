@@ -32,8 +32,19 @@
     .welcome-text {
         font-size: 24px;
         font-weight: bold;
-        color: #007bff;
+        color: #6495ED;
+        {% comment %} color: black; {% endcomment %}
     }
+
+    .btn-primary {
+      background-color:#6495ED;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+
   </style>
 
 </head>
@@ -143,8 +154,8 @@
               {{request.user.employee.last_name}}</span><span
                 class="glyphicon glyphicon-triangle-bottom"></span></button>
             <div id="myDropdown1" class="dropdown-content">
-              <a href="{% url 'edit_profile' user.employee.pk %}">Edit Profile</a>
               <a href="#">Change status</a>
+              {% comment %} <a href="{% url 'edit-profile' user.employee.id %}">Edit Profile</a> {% endcomment %}
               <a href="#">View Salary slip</a>
               <li><a href="/password_reset/"><span class=""></span>Reset password</a></li>
               <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
@@ -163,10 +174,13 @@
 {%block welcome%}
   <div id="timestamp" class="timestamp-container">
     <p class="timestamp-text">{{ current_datetime }}</p>
-    <p class="welcome-text">Welcome, {{ request.user.employee.first_name }} {{ request.user.employee.last_name }}</p>
+
+    <p class="welcome-text">{{ greeting }}, {{ request.user.employee.first_name }} {{ request.user.employee.last_name }}</p>
 
     <div class ='check-in-out'>
-      <a href = "{%url 'check-in' %}"><button id = "checkInOutButton" class = 'btn btn-primary' onclick="toggleCheckInOut()">Check-in</button></a>
+      <a href="{% url 'check-in' %}"><button id = "checkInOutButton" class = 'btn btn-primary' onclick="toggleCheckInOut()">Check-in</button>
+      {% comment %} <a href="{% url 'check-out' %}"><button id = "checkInOutButton" class = 'btn btn-primary' onclick="toggleCheckInOut()">Check-out</button> {% endcomment %}
+
     </div>
 
 </div>
@@ -181,14 +195,20 @@ function toggleCheckInOut(){
   if(button.innerHTML === "Check-in")
   {
     setTimeout(function(){
-      button.innerHTML = 'Check-out';
+      sessionStorage.setItem("checkInOutButton", "Check-out");
     },1000);
   }else{
     setTimeout(function(){
-      button.innerHTML = 'Check-in';
+      sessionStorage.setItem("checkInOutButton", "Check-in");
     },1000)
   }
 } 
+
+{% comment %} function toggleCheckInOut()
+{
+  localStorage.checkInOutButton
+  }  {% endcomment %}
+
 
 
 

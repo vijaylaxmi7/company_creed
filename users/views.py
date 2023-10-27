@@ -46,10 +46,22 @@ class EditProfileView(UpdateView):
 
 
 def index(request):
+    
+    now = datetime.datetime.now()
+    hour = now.hour
+
+    if hour < 12:
+        greeting = "Good Morning"
+    elif hour < 18:
+        greeting = "Good Afternoon"
+    else:
+        greeting = "Good Evening"
 
     current_datetime = timezone.now().strftime("%I:%M%p on %B %d, %Y")
     # current_datetime = timezone.localtime()
-    context = {'current_datetime': current_datetime}
+    context = {
+        'current_datetime': current_datetime,
+        'greeting' : greeting}
     return render(request, "users/index.html", context)
 
 
@@ -94,8 +106,6 @@ class EmployeeSignin(View):
                 return HttpResponseRedirect('/index/')
             else :
                 return HttpResponse("not authenticate")
-            
-            return render(request, self.template_name, context={'form': form})
                 
         message = 'Login failed!'
         return render(request, self.template_name, context={'form': form, 'message': message})

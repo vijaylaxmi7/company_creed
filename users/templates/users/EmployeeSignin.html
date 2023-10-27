@@ -73,6 +73,7 @@
         padding: 14.5px;
         margin: 2rem 0;
         color: var(--color);
+        width: 100%;
         outline: none;
         background-color: #9191911f;
         border: none;
@@ -95,7 +96,7 @@
     
     .login-container form button {
         background-color: var(--primary-color);
-        color: var(--color);
+        color: white;
         display: block;
         padding: 13px;
         border-radius: 5px;
@@ -249,8 +250,8 @@
             </form>
 
             <div class="register-forget opacity">
-                <a href="">REGISTER</a>
-                <a href="">FORGOT PASSWORD</a>
+                <a href="{% url 'user-signup' %}">REGISTER</a>
+                <a href="{% url 'password_reset' %}">FORGOT PASSWORD</a>
             </div>
 
         </div>

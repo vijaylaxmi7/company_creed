@@ -8,6 +8,7 @@ from django.views.generic.base import TemplateView
 urlpatterns = [
 
      path('check-in/', views.CreateCheckInTime, name='check-in' ),
+     # path('check-out/', views.CreateCheckOutTime, name = 'check-out'),
      path('check-in-out/', views.CheckInOutStatus.as_view(), name='check-in-out')
 
 ]
