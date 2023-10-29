@@ -1,4 +1,9 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 
+}
     :root {
         --background: #1a1a2e;
         /* --color: #ffffff; */
@@ -41,12 +46,16 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        height: 100vh;
     }
     
     .login-container {
+        width: 100%;
+        max-width: 500px;
         position: relative;
         width: 500px;  
         z-index:100; 
+        
     }
     .form-container {
         border: 1px solid hsla(0, 0%, 65%, 0.158);
@@ -64,6 +73,7 @@
     
     .login-container form input {
         display: block;
+        width: 100%;
         padding: 14.5px;
         margin: 2rem 0;
         color: var(--color);

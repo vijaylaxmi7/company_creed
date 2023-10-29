@@ -13,10 +13,6 @@ html {
 }
 
 
-.input label{
-    color: #000;
-}
-
 body {
     /* margin: 0;
     box-sizing: border-box;
@@ -222,12 +218,8 @@ h1 {
     }
 }
 
-textarea:focus, input:focus {
-    color: #ff0000;
-}
 
-input, textarea{
-    color: #000;
-}
+
+
 
 
