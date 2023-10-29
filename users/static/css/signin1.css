@@ -4,11 +4,6 @@
     box-sizing: border-box;
 
 }
-    :root {
-        --background: #1a1a2e;
-        /* --color: #ffffff; */
-        --primary-color: #0f3460;
-    }
     
     * {
         box-sizing: border-box;
@@ -35,7 +30,7 @@
     
     a {
         text-decoration: none;
-        color: var(--color);
+        color: black;
     }
     
     h1 {
@@ -76,7 +71,7 @@
         width: 100%;
         padding: 14.5px;
         margin: 2rem 0;
-        color: var(--color);
+        color: #3F64A8;
         outline: none;
         background-color: #9191911f;
         border: none;
@@ -98,8 +93,8 @@
     }
     
     .login-container form button {
-        background-color: var(--primary-color);
-        color: var(--color);
+        background-color: #3F64A8;
+        color: white;
         display: block;
         padding: 13px;
         border-radius: 5px;

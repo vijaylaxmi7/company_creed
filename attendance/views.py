@@ -20,6 +20,15 @@ from django.core.cache import cache
 
 
 
+def TotalWorkingHour(request):
+
+    loggedInUser = request.user.employee
+    attendance = Attendance.objects.get(employee = loggedInUser, date = datetime.date.today())
+    inTime = attendance.checkInTime
+    outTime = attendance.checkOutTime
+    
+    
+
 # def CreateCheckInTime(request):
     
 #     loggedInUser = request.user.employee
@@ -55,7 +64,6 @@ def CreateCheckInTime(request):
             for obj in attendance:
                 obj.checkOutTime = timezone.now()
                 obj.save()
-            cache.set(f'user_{loggedInUser.id}_check_status', 'check-out', 3600)
             return HttpResponse('success')
         else:
             createCheckInTime = Attendance.objects.create(employee=loggedInUser, checkInTime=timezone.now(), date=datetime.date.today())

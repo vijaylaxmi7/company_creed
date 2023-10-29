@@ -88,8 +88,8 @@ h1 {
 }
 
 .login-container form button {
-    background-color: var(--primary-color);
-    color: var(--color);
+    background-color: #3F64A8;
+    color: white;
     display: block;
     padding: 13px;
     border-radius: 5px;

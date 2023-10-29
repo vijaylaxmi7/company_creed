@@ -67,9 +67,9 @@ h1 {
     padding: 14.5px;
     width: 100%;
     margin: 2rem 0;
-    color: var(--color);
+    color: #3F64A8;
     outline: none;
-    background-color: #9191911f;
+    background-color: white;
     border: none;
     border-radius: 5px;
     font-weight: 500;
@@ -89,8 +89,8 @@ h1 {
 }
 
 .login-container form button {
-    background-color: var(--primary-color);
-    color: var(--color);
+    background-color: #3F64A8;
+    color: white;
     display: block;
     padding: 13px;
     border-radius: 5px;
