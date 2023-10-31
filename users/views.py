@@ -44,7 +44,7 @@ class EditProfileView(UpdateView):
     template_name ="users/editProfile.html"
     success_url = reverse_lazy('index')
 
-    def id(self, queryset=None):
+    def id(self):
 
         return self.request.user.id
 

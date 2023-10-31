@@ -249,7 +249,7 @@ class TaskAssignment(View):
 #             email = EmailMessage("New Task Assignment", message, recipient_list,context_instance=RequestContext(request))
 #             return HttpResponseRedirect('/index/')
 #         return render(request, self.template_name, {'form' : form})
-# task_link = request.build_absolute_uri(reverse('task-detail', args = [task.id]))
+
 
 
     

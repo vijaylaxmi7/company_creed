@@ -13,13 +13,12 @@
   <link rel="stylesheet" href="{% static 'css/home.css'%}">
 
   <style>
-    /* Your custom styles here */
+  
   </style>
 </head>
 
 <body>
   {% if user.employee.is_authenticated %}
-  <!-- Side Navigation (Sidenav) -->
   <div id="sidenav" class="sidenav">
     <div class="logo">
       <img src="{% static '/images/logo.jpg' %}" alt="Company Logo">
@@ -58,12 +57,12 @@
     {% endif %}
 
 
-    <a onmouseenter="taskFunction()">
+    <a onmouseenter="leaveFunction()">
       <span class="glyphicon glyphicon-tasks"></span> Manage Leave
     </a>
     {% if request.user.employee.is_manager %}
-    <div id="taskDropdown" class="dropdown-content">
-      <a href="#">Apply Leaves</a>
+    <div id="leaveDropdown" class="dropdown-content">
+      <a href="{% url 'leave-application' %}">Apply Leaves</a>
       <a href="#">My Leaves</a>
       <a href="{% url 'view-task' %}">Manage leave applications</a>
     </div>
@@ -90,7 +89,6 @@
 
   </div>
 
-  <!-- Main Content -->
   <div id="main">
     <nav class="navbar navbar-inverse">
       <div class="container-fluid">
@@ -125,7 +123,7 @@
                   class="glyphicon glyphicon-triangle-bottom"></span></button>
               <div id="myDropdown1" class="dropdown-content">
                 <a href="#">Change status</a>
-                <a href="{% url 'edit-profile' request.user.id %}">Edit Profile</a>
+                <a href="{% url 'edit-profile' request.user.employee.id %}">Edit Profile</a>
                 <a href="#">View Salary slip</a>
                 <li><a href="/password_reset/"><span class=""></span>Reset password</a></li>
                 <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
@@ -213,6 +211,21 @@
       }
     }
 
+    function leaveFunction() {
+      document.getElementById("leaveDropdown").classList.toggle("show");
+    }
+    window.onclick = function (event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
   </script>
 
 

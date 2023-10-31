@@ -1,11 +1,10 @@
 
 {%extends 'users/base.html'%}
+{%block edit%}
 {% load static %}
 {% block welcome %}{% endblock welcome %}
-{%block edit%}
 
  <link rel="stylesheet" href="{% static 'css/editProfile.css'%}">
-
 <section class="container">
     <div class="login-container">
 
@@ -15,14 +14,13 @@
             <form action="" enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
                 {{ form.as_p}}
-                
                 <button class="opacity">UPDATE</button>
             </form>
         </div>
-        </div>
-        </section>
+    </div>
+</section>
 
-        {%endblock edit%}
+{%endblock edit%}
 
 
 

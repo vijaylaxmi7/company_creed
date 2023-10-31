@@ -17,17 +17,28 @@ from users.views import index
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.core.cache import cache
+from django.db.models import DurationField, ExpressionWrapper, F, IntegerField, Value, TimeField
+from django.db.models.functions import Coalesce
 
 
 
 def TotalWorkingHour(request):
 
     loggedInUser = request.user.employee
-    attendance = Attendance.objects.get(employee = loggedInUser, date = datetime.date.today())
-    inTime = attendance.checkInTime
-    outTime = attendance.checkOutTime
+    attendance = Attendance.objects.filter(employee = loggedInUser, date = datetime.date.today()).last()
+    # attendance.totalHoursWorked = attendance.checkOutTime - attendance.checkInTime
+    total_hours = attendance.checkOutTime - attendance.checkInTime
+    attendance.totalHoursWorked  = total_hours
+    attendance.save()
     
     
+    context = {
+        'totalHoursWorked' : total_hours
+    }
+
+    return render(request, 'attendance/check-in-out.html', context)
+
+
 
 # def CreateCheckInTime(request):
     
@@ -100,6 +111,19 @@ class CheckInOutStatus(ListView):
      fields = ['employee', 'checkInTime', 'checkOutTime', 'date']
      template_name = 'attendance/check-in-out.html'
      
+
+
+#attendance = attendance.annotate(total_working_hours = F('checkOutTime')-F('checkInTime'))
+    #print('---------->',attendance,attendance[0])
+    #breakpoint()
+    # attendance.update(checkOutTime=F('checkOutTime')-F('checkInTime'))
+    # print('------>',attendance)
+    # inTime = attendance.checkInTime
+    # outTime = attendance.checkOutTime
+    # totalHoursWorked = attendance.aggregate(
+    # total_time=sum(ExpressionWrapper(
+    #     F('checkOutTime') - F('checkInTime'), output_field=DurationField())
+    # ))['total_time']
 
 
 

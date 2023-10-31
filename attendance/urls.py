@@ -9,7 +9,8 @@ urlpatterns = [
 
      path('check-in/', views.CreateCheckInTime, name='check-in' ),
      path('check-out/', views.CreateCheckInTime, name = 'check-out'),
-     path('check-in-out/', views.CheckInOutStatus.as_view(), name='check-in-out')
+     path('check-in-out/', views.CheckInOutStatus.as_view(), name='check-in-out'),
+     path('total-working-hours/', views.TotalWorkingHour, name='total-working-hours')
 
 ]
 

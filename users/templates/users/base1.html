@@ -205,13 +205,11 @@
     const action = button.dataset.action;
     const url = action === 'check-in' ? "{% url 'check-in' %}" : "{% url 'check-out' %}";
 
-    // Make an AJAX request to the URL
+    
     fetch(url)
         .then(response => response.text())
         .then(data => {
-            // Handle the response, you can display a message or perform any other actions here
             console.log(data);
-            // Toggle the button label and action
             if (action === 'check-in') {
                 button.textContent = 'Check Out';
                 button.dataset.action = 'check-out';
