@@ -64,7 +64,7 @@
     <div id="leaveDropdown" class="dropdown-content">
       <a href="{% url 'leave-application' %}">Apply Leaves</a>
       <a href="#">My Leaves</a>
-      <a href="{% url 'view-task' %}">Manage leave applications</a>
+      <a href="{% url 'leave-manage' %}">Manage leave applications</a>
     </div>
     {% else %}
     <div id="taskDropdown" class="dropdown-content">
@@ -264,10 +264,7 @@ function toggleCheckInOut() {
           
           localStorage.setItem('checkInOutState', button.dataset.action);
       });
-}  {% comment %} function toggleCheckInOut()
-  {
-    localStorage.checkInOutButton
-    }  {% endcomment %}
+}
   
   </script>
   {%else%}

@@ -11,97 +11,65 @@ from django.views.generic.edit import DeleteView
 
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse, request
+from .utils import calculate_total_hours_worked
 from .models import Attendance
 from users.models import Employee, CustomUser
 from users.views import index
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
-from django.core.cache import cache
-from django.db.models import DurationField, ExpressionWrapper, F, IntegerField, Value, TimeField
-from django.db.models.functions import Coalesce
-
-
-
-def TotalWorkingHour(request):
-
-    loggedInUser = request.user.employee
-    attendance = Attendance.objects.filter(employee = loggedInUser, date = datetime.date.today()).last()
-    # attendance.totalHoursWorked = attendance.checkOutTime - attendance.checkInTime
-    total_hours = attendance.checkOutTime - attendance.checkInTime
-    attendance.totalHoursWorked  = total_hours
-    attendance.save()
-    
-    
-    context = {
-        'totalHoursWorked' : total_hours
-    }
-
-    return render(request, 'attendance/check-in-out.html', context)
-
-
-
-# def CreateCheckInTime(request):
-    
-#     loggedInUser = request.user.employee
-#     if loggedInUser.is_authenticated:
-#         createCheckInTime = Attendance.objects.create(employee = loggedInUser, checkInTime = timezone.now(), date = datetime.date.today())
-#         createCheckInTime.save()
-#         return HttpResponse('success')
-        
-#     return render(request, 'users/index.html')
-
-# def CreateCheckOutTime(request):
-       
-#     loggedInUser = request.user.employee
-#     if loggedInUser.is_authenticated:
-#         createCheckOutTime = Attendance.objects.create(employee = loggedInUser, checkOutTime = timezone.now(), date = datetime.date.today())
-#         createCheckOutTime.save()
-#         return HttpResponse('success')
-        
-#     return render(request, 'users/index.html')
-       
+from datetime import timedelta
+from datetime import datetime
+import locale
 
 
 
 def CreateCheckInTime(request):
     loggedInUser = request.user.employee
     if loggedInUser.is_authenticated:
-        isEntry = Attendance.objects.filter(employee=loggedInUser, date=datetime.date.today()).exists()
-        print(isEntry)
+        isEntry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).exists()
         if isEntry:
-            attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.date.today())
-            # entry.checkOutTime = timezone.now()
-            # entry.save()
+            attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
             for obj in attendance:
                 obj.checkOutTime = timezone.now()
                 obj.save()
             return HttpResponse('success')
         else:
-            createCheckInTime = Attendance.objects.create(employee=loggedInUser, checkInTime=timezone.now(), date=datetime.date.today())
+            createCheckInTime = Attendance.objects.create(employee=loggedInUser, checkInTime=timezone.now(), date=datetime.today())
             createCheckInTime.save()
 
-            return HttpResponse('success')
+        return HttpResponse('success')
+
     return render(request, 'users/index.html')
 
 
+def TotalWorkingHour(request):
+    loggedInUser = request.user.employee
+    attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).last()
 
-
-# def CreateCheckInTime(request):
+    if attendance.checkInTime and attendance.checkOutTime:
+        # attendance.checkOutTime = datetime.strptime("%H:%M:%S:")
+        # attendance.checkInTime = datetime.strptime("%H:%M:%S:")
+        inTime = attendance.checkInTime
+        outTime = attendance.checkOutTime
     
-#     if request.method == 'POST':
-#         loggedInUser = request.user.employee
-        
-#         if loggedInUser.is_authenticated:
-#                     if Attendance.checkOutTime:
-#                         createCheckInTime = Attendance.objects.create(employee = loggedInUser, checkInTime = timezone.now(), date = datetime.date.today())
-#                         createCheckInTime.save()
-#                         return HttpResponse('success')
-#         else:
-#             createCheckOutTime = Attendance.objects.create(employee = loggedInUser, checkOutTime = timezone.now(), date = datetime.date.today())
-#             createCheckOutTime.save()
-#             return HttpResponse('success')
-          
-#     return render(request, 'users/index.html')
+        inTime_delta = timedelta(hours= inTime.hour, minutes=inTime.minute, seconds= inTime.second)
+        outTime_delta = timedelta(hours= outTime.hour, minutes=outTime.minute, seconds= outTime.second)
+        total_hours = outTime_delta.days - inTime_delta.days
+        # n = datetime.strptime(str(total_hours), '%H:%M:%S.%f').time()
+
+        total_seconds = total_hours.total_seconds()
+        total_hours = total_seconds // 3600 
+        minutes = round((total_seconds % 3600) / 60)
+
+        attendance.totalHoursWorked = minutes
+        attendance.save()
+    else:
+        total_hours = None
+
+    context = {
+        'totalHoursWorked': total_hours
+    }
+    return render(request, 'attendance/check-in-out.html', context)
 
 
 
@@ -113,17 +81,7 @@ class CheckInOutStatus(ListView):
      
 
 
-#attendance = attendance.annotate(total_working_hours = F('checkOutTime')-F('checkInTime'))
-    #print('---------->',attendance,attendance[0])
-    #breakpoint()
-    # attendance.update(checkOutTime=F('checkOutTime')-F('checkInTime'))
-    # print('------>',attendance)
-    # inTime = attendance.checkInTime
-    # outTime = attendance.checkOutTime
-    # totalHoursWorked = attendance.aggregate(
-    # total_time=sum(ExpressionWrapper(
-    #     F('checkOutTime') - F('checkInTime'), output_field=DurationField())
-    # ))['total_time']
+
 
 
 

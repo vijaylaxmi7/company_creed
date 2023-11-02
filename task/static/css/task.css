@@ -32,3 +32,28 @@ hr {
     margin-bottom: 25px;
   }
   
+
+  /* Dropdown Content */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #4b86ef;
+    min-width: 160px;
+    z-index: 1;
+    color: #333;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    color: #333;
+    transition: 0.3s;
+  }
+  
+  .dropdown-content a:hover {
+    background-color: #3F64A8;
+    color: white;
+  }
+

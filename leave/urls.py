@@ -8,7 +8,9 @@ from django.views.generic.base import TemplateView
 urlpatterns = [
 
     path('leave-application/', views.LeaveApplication.as_view(), name='leave-application'),
-    path('send-mail/', views.send_custom_email, name="send-mail"),
+    path('manage-leave/', views.ManageLeaveApplication.as_view(), name="leave-manage"),
+    path('status/<int:pk>/', views.updateStatus.as_view(), name="status"),
+    path('send-status/', views.SendStatus, name="send-status")
 
 ]
 
