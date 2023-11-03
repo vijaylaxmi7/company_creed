@@ -28,27 +28,6 @@ from users.helpers import send_task_email
 # Create your views here.
 
 
-class updateTask(UpdateView):
-    model = Task
-    fields = ['task', 'employee', 'project', 'start_date', 'estimate_date', 'description', 'file_attachment']
-    template_name = 'task/updateTask.html'
-    success_url = reverse_lazy('view-task')
-    
-    
-
-class deleteTask(DeleteView):
-    model =Task
-    template_name = 'task/delete-task.html'
-    success_url = reverse_lazy("view-task")
-
-
-class viewTask(ListView):
-    model = Task
-    exclude_fields = ['description']
-    template_name = 'task/view-task.html'
-
-
-
 class TaskAssignment(View):
 
     form = TaskAssignmentForm
@@ -82,6 +61,29 @@ class TaskAssignment(View):
                 return HttpResponseRedirect('/index/')
         
         return render(request, self.template_name, {'form' : form})
+
+
+class updateTask(UpdateView):
+    model = Task
+    fields = ['task', 'employee', 'project', 'start_date', 'estimate_date', 'description', 'file_attachment']
+    template_name = 'task/updateTask.html'
+    success_url = reverse_lazy('view-task')
+    
+    
+
+class deleteTask(DeleteView):
+    model =Task
+    template_name = 'task/delete-task.html'
+    success_url = reverse_lazy("view-task")
+
+
+class viewTask(ListView):
+    model = Task
+    exclude_fields = ['description']
+    template_name = 'task/view-task.html'
+
+
+
 
 
     

@@ -33,38 +33,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 
 
-
 # Create your views here.
 
-
-class ManageLeaveApplication(ListView):
-    model = EmployeeLeave
-    exclude_fields = ['manager']
-    template_name = 'leave/manage-leave.html'
-
-
-
-
-def SendStatus(request):
-
-    if request.method == 'POST':
-        status = request.POST.get("status")
-        email = request.POST.get("employee")
-        recipient_name = request.POST.get("employee")
-        subject = 'Application for leave'
-        html_template = get_template('leave/leave.html')
-        html_content = html_template.render({'type': type,'recipient_name' : recipient_name,'status': status })
-        email = EmailMultiAlternatives(
-               subject,
-               'I am writing this to ask for leave in advance.',
-               settings.EMAIL_HOST_USER,
-               [email],
-           )
-        email.attach_alternative(html_content, 'leave/leave.html')
-        email.send()
-        return HttpResponse('Email sent successfully')
-    return render(request, "leave/manage-leave.html")
-    
 
 class LeaveApplication(View):
     form = leaveApplicationForm
@@ -103,6 +73,52 @@ class LeaveApplication(View):
         
         return render(request, self.template_name, {'form' : form})
     
+
+def LeaveApproveReject(request,employeeleave_id):
+    if request.method == 'POST':
+        leave_id = EmployeeLeave.objects.get(leave_id=employeeleave_id)
+        print( leave_id)
+        if 'approve':
+            leaveChoice = EmployeeLeave.objects.create(
+                    leave_id= leave_id, leaveChoice = 'approve')
+            print(leaveChoice)
+            leaveChoice.save()
+            return HttpResponse("Approved")
+        elif 'reject':
+            leaveChoice = EmployeeLeave.objects.create(
+                    leave_id= leave_id, leaveChoice = 'reject')
+            leaveChoice.save()
+
+    return render(request, 'leave/manage-leave.html')
+
+
+class ManageLeaveApplication(ListView):
+    model = EmployeeLeave
+    exclude_fields = ['manager']
+    template_name = 'leave/manage-leave.html'
+
+
+# def SendStatus(request):
+
+#     if request.method == 'POST':
+#         status = request.POST.get("status")
+#         email = request.POST.get("employee")
+#         recipient_name = request.POST.get("employee")
+#         subject = 'Application for leave'
+#         html_template = get_template('leave/leave.html')
+#         html_content = html_template.render({'type': type,'recipient_name' : recipient_name,'status': status })
+#         email = EmailMultiAlternatives(
+#                subject,
+#                'I am writing this to ask for leave in advance.',
+#                settings.EMAIL_HOST_USER,
+#                [email],
+#            )
+#         email.attach_alternative(html_content, 'leave/leave.html')
+#         email.send()
+#         return HttpResponse('Email sent successfully')
+#     return render(request, "leave/manage-leave.html")
+    
+
 
 class updateStatus(UpdateView):
     model = EmployeeLeave

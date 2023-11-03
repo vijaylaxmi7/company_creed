@@ -17,30 +17,22 @@
         <li><b> To date : </b>{{ object.endDate }}</li> 
         <li><b>Reason : </b>{{ object.reason }}</li> 
         <li><b>Status : </b>{{ object.status }}</li> 
+        <form method = 'POST' action="{% url 'send-status' object.id %}">
+          {% csrf_token %}
+        <button id = "approve">Approve</button> <button id = 'reject'>Rejecte</button> 
+        </form>
 
         
-          <div class = "status">
+          {% comment %} <div class = "status">
           <label for = "id_status"> Status</lable>
           <select name = "status" id = "id_status">
             <option value = "Pending">Pending</option>
             <option value = "Aproved">Approved</option>
             <option value = "Rejected">Rejected</option>
           </select>
-          <a href = "{%url 'send-status' %}"><button class="opacity">UPDATE</button></a>
+          <a href = "{%url 'send-status' %}"><button class="opacity">UPDATE</button></a> {% endcomment %}
 
 
-          <th>
-            <label for="{{form.leaveChoice.id_label}}">  
-              {{form.leaveChoice.label}}
-            </lable>
-          </th>
-
-          <td>{% for value, displayable in form.leaveChoice.choices %}
-            <option value="{{value}}">{{displayable}}</option>
-          {% endfor %}
-      </td>
-
-      </div> 
 
         <hr/> 
         {% empty %} 

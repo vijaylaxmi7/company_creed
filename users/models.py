@@ -59,7 +59,7 @@ class Employee(CustomUser):
         ]
     
     is_manager = models.BooleanField(default=False)
-    technology = models.ManyToManyField(Technology, null=True)
+    technology = models.ManyToManyField(Technology)
     designation = models.ForeignKey(Designation, null=True, on_delete=models.SET_NULL)
     year_of_experience = models.IntegerField(default=0, null=True)
     joining_date = models.DateField(null=True)

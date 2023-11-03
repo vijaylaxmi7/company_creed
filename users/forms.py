@@ -1,6 +1,8 @@
 from django.forms import ModelForm
 from .models import Employee
 from django import forms
+from django.forms import widgets
+from django.forms.widgets import SelectDateWidget, DateInput
 from django.contrib.auth.forms import UserCreationForm
 
 class EmployeeSignupForm(UserCreationForm):
@@ -10,6 +12,10 @@ class EmployeeSignupForm(UserCreationForm):
         fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state',   'id_proof' , 'id_proof_file']
         exclude = ['']
         # fields = "__all__"
+
+        widgets = {
+            'date_of_birth' : SelectDateWidget(),
+        }
 
 
 

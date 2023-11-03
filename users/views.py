@@ -30,13 +30,6 @@ from django.utils import timezone
 # Create your views here.
 
 
-def myTask(request):
-
-    task = Task.objects.filter(employee = request.user.employee)
-    context = {'task' : task}
-    return render(request, 'users/my-task.html', context=context)
-
-
 class EditProfileView(UpdateView):
 
     model = Employee
@@ -117,6 +110,13 @@ class EmployeeSignin(View):
                 
         message = 'Login failed!'
         return render(request, self.template_name, context={'form': form, 'message': message})
+
+
+def myTask(request):
+
+    task = Task.objects.filter(employee = request.user.employee)
+    context = {'task' : task}
+    return render(request, 'users/my-task.html', context=context)
 
 
 def Logout(request):
