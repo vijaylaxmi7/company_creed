@@ -19,51 +19,74 @@ from django.shortcuts import redirect
 from datetime import timedelta
 from datetime import datetime
 import locale
+from .utils import TotalWorkingHour
 
 
 
+class CreateCheckInOutTime(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            loggedInUser = request.user.employee  
+            today = datetime.today()
 
-def TotalWorkingHour(request):
+            isEntry = Attendance.objects.filter(employee=loggedInUser, date=today).exists()
 
-    loggedInUser = request.user.employee
-    attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).last()
-    if attendance.checkInTime and attendance.checkOutTime:
-        inTime = attendance.checkInTime
-        outTime = attendance.checkOutTime
-        print(inTime)
-        inTime_delta = timedelta( hours= inTime.hour, minutes=inTime.minute, seconds= inTime.second)
-        outTime_delta = timedelta( hours= outTime.hour, minutes=outTime.minute, seconds= outTime.second)
-        print(outTime_delta)
-        totalHoursWorked = outTime_delta - inTime_delta
-        print(totalHoursWorked)
-        attendance.totalHoursWorked = totalHoursWorked
-        attendance.save()
+            if isEntry:
+                attendance = Attendance.objects.filter(employee=loggedInUser, date=today)
+                for obj in attendance:
+                    obj.checkOutTime = timezone.now()
+                    obj.save()
+            else:
+                createCheckInTime = Attendance.objects.create(
+                    employee=loggedInUser,
+                    checkInTime=timezone.now(),
+                    date=today
+                )
+                createCheckInTime.save()
 
-    context = {
-        'totalHoursWorked':totalHoursWorked
-    }
+            totalHoursWorked = TotalWorkingHour(request)
 
-    return render(request, 'attendance/total.html', context)
-
-
-
-def CreateCheckInTime(request):
-    loggedInUser = request.user.employee
-    if loggedInUser.is_authenticated:
-        isEntry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).exists()
-        if isEntry:
-            attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
-            for obj in attendance:
-                obj.checkOutTime = timezone.now()
-                obj.save()
             return HttpResponse('success')
-        else:
-            createCheckInTime = Attendance.objects.create(employee=loggedInUser, checkInTime=timezone.now(), date=datetime.today())
-            createCheckInTime.save()
+        
+        return render(request, 'users/index.html')  
+        
 
-        return HttpResponse('success')
 
-    return render(request, 'users/index.html')
+class CheckInOutStatus(ListView):
+     
+     model = Attendance
+     fields = ['employee', 'checkInTime', 'checkOutTime', 'date']
+     template_name = 'attendance/check-in-out.html'
+
+
+
+
+
+
+
+
+# def CreateCheckInOutTime(request):
+#     loggedInUser = request.user.employee
+#     if loggedInUser.is_authenticated:
+#         isEntry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).exists()
+#         if isEntry:
+#             attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
+#             for obj in attendance:
+#                 obj.checkOutTime = timezone.now()
+#                 obj.save()
+#             return HttpResponse('success')
+#         else:
+#             createCheckInTime = Attendance.objects.create(employee=loggedInUser, checkInTime=timezone.now(), date=datetime.today())
+#             createCheckInTime.save()
+
+#         return HttpResponse('success')
+
+#     return render(request, 'users/index.html')
+
+
+
+
+
 
 
 # def TotalWorkingHour(request):
@@ -93,11 +116,7 @@ def CreateCheckInTime(request):
 
 
 
-class CheckInOutStatus(ListView):
-     
-     model = Attendance
-     fields = ['employee', 'checkInTime', 'checkOutTime', 'date']
-     template_name = 'attendance/check-in-out.html'
+
      
 
 
