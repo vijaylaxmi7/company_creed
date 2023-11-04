@@ -3,18 +3,12 @@ from django.forms import ModelForm
 
 from .models import Task
 from users.models import Employee
+from django.forms.widgets import SelectDateWidget, DateInput
+
 
 
 
 class TaskAssignmentForm(forms.ModelForm):
-
-    # task = forms.CharField(max_length=50)
-    # assigned_to = forms.ModelChoiceField(queryset=Employee.objects.all())
-    # project = forms.CharField(max_length=50)
-    # start_date = forms.DateField()
-    # estimate_date = forms.DateField()
-    # description = forms.Textarea()
-    # attachment = forms.FileField()
 
     class Meta:
         model = Task
@@ -23,6 +17,10 @@ class TaskAssignmentForm(forms.ModelForm):
         }
         fields = ['task', 'employee', 'project', 'start_date', 'estimate_date', 'description', 'file_attachment']
         # exlude = ['manager']
+        widgets = {
+            'start_date' : SelectDateWidget(),
+            'estimate_date'  : SelectDateWidget()
+        }
         
 
 class EmployeeTaskForm(forms.ModelForm):

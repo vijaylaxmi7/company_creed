@@ -74,20 +74,20 @@ class LeaveApplication(View):
         return render(request, self.template_name, {'form' : form})
     
 
-def LeaveApproveReject(request,employeeleave_id):
+def LeaveApproveReject(request):
+    
     if request.method == 'POST':
-        leave_id = EmployeeLeave.objects.get(leave_id=employeeleave_id)
-        print( leave_id)
         if 'approve':
-            leaveChoice = EmployeeLeave.objects.create(
-                    leave_id= leave_id, leaveChoice = 'approve')
+            leaveChoice = EmployeeLeave.objects.filter(id= EmployeeLeave.id).update(leaveChoice = 'approve')
+            EmployeeLeave.leaveChoice = leaveChoice
             print(leaveChoice)
-            leaveChoice.save()
+            EmployeeLeave.save()
             return HttpResponse("Approved")
         elif 'reject':
-            leaveChoice = EmployeeLeave.objects.create(
-                    leave_id= leave_id, leaveChoice = 'reject')
-            leaveChoice.save()
+            leaveChoice = EmployeeLeave.objects.filter(id = EmployeeLeave.id).update(leaveChoice = 'reject')
+            EmployeeLeave.leaveChoice = leaveChoice
+            EmployeeLeave.save()
+            return HttpResponse("Rejected")
 
     return render(request, 'leave/manage-leave.html')
 
@@ -118,13 +118,6 @@ class ManageLeaveApplication(ListView):
 #         return HttpResponse('Email sent successfully')
 #     return render(request, "leave/manage-leave.html")
     
-
-
-class updateStatus(UpdateView):
-    model = EmployeeLeave
-    fields = ['leaveChoice']
-    template_name = 'leave/manage-leave.html'
-    success_url = HttpResponse('updated')
 
 
 

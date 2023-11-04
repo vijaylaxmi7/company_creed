@@ -24,8 +24,14 @@ from django.conf import settings
 import uuid
 
 from users.helpers import send_task_email
+from users.helpers import send_leave_email
+
+from django.core.mail import send_mail
+from django.template.loader import get_template
+from django.core.mail import EmailMultiAlternatives
 
 # Create your views here.
+
 
 
 class TaskAssignment(View):
@@ -41,26 +47,32 @@ class TaskAssignment(View):
 
         form = self.form(request.POST, request.FILES)
         if form.is_valid():
-
-            if request.user.employee.is_manager:
-                with get_connection(
-                host = settings.EMAIL_HOST,
-                port = settings.EMAIL_PORT,
-                username = settings.EMAIL_HOST_USER,
-                password = settings.EMAIL_HOST_PASSWORD,
-                use_tls = settings.EMAIL_USE_TLS
-
-                )as connection:
-
                     task = form.cleaned_data['task']
-                    email = form.cleaned_data['employee']            
-                    token = str(uuid.uuid4())
+                    email = form.cleaned_data['employee']  
+                    project = form.cleaned_data['project']
+                    description = form.cleaned_data['description']
+                    start_date = form.cleaned_data['start_date']
+                    estimate_date = form.cleaned_data['estimate_date']
+                    file_attachment = form.cleaned_data['file_attachment']
+                    subject = "New Task Assignment."
+                    html_template = get_template('task/taskTemplate.html')
+                    html_content = html_template.render({'task':task,'project': project ,'description' : description,'start_date': start_date, 'estimate_date': estimate_date,'file_attachment' : file_attachment})
+                    email = EmailMultiAlternatives(
+                            subject,
+                            'You have been assigned with new task.',
+                            settings.EMAIL_HOST_USER,
+                            [email],
+                        )
+                    email.content_subtype = 'html'
+                    # email.attach_alternative(html_content, 'file_attachment')
+                    email.send()         
                     form.save()
-                    send_task_email(email, token, task)
-                # messages.success(request, "Task Assigned!")
-                return HttpResponseRedirect('/index/')
+                    # messages.success(request, "Task Assigned!")
+                    return HttpResponseRedirect('/index/')
         
         return render(request, self.template_name, {'form' : form})
+
+
 
 
 class updateTask(UpdateView):
@@ -84,6 +96,39 @@ class viewTask(ListView):
 
 
 
+# class TaskAssignment(View):
+
+#     form = TaskAssignmentForm
+#     template_name = 'task/taskAssignment.html'
+
+#     def get(self, request):
+
+#         return render(request, self.template_name, {'form': self.form})
+        
+#     def post(self, request):
+
+#         form = self.form(request.POST, request.FILES)
+#         if form.is_valid():
+
+#             if request.user.employee.is_manager:
+#                 with get_connection(
+#                 host = settings.EMAIL_HOST,
+#                 port = settings.EMAIL_PORT,
+#                 username = settings.EMAIL_HOST_USER,
+#                 password = settings.EMAIL_HOST_PASSWORD,
+#                 use_tls = settings.EMAIL_USE_TLS
+
+#                 )as connection:
+
+#                     task = form.cleaned_data['task']
+#                     email = form.cleaned_data['employee']            
+#                     token = str(uuid.uuid4())
+#                     form.save()
+#                     send_task_email(email, token, task)
+#                 # messages.success(request, "Task Assigned!")
+#                 return HttpResponseRedirect('/index/')
+        
+#         return render(request, self.template_name, {'form' : form})
 
 
     

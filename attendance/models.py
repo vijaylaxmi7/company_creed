@@ -16,7 +16,8 @@ class Attendance(models.Model):
     checkOutTime = models.TimeField( null=True)
     startBreakTime = models.TimeField(null=True)
     endBreakTime = models.TimeField(null=True)
-    totalHoursWorked = models.DurationField(max_length=50)
+    totalHoursWorked = models.DurationField(null=True)
+    
 
 
     

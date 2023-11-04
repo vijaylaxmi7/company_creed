@@ -24,28 +24,25 @@ import locale
 
 
 def TotalWorkingHour(request):
+
     loggedInUser = request.user.employee
     attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).last()
-
     if attendance.checkInTime and attendance.checkOutTime:
         inTime = attendance.checkInTime
         outTime = attendance.checkOutTime
         print(inTime)
-    
         inTime_delta = timedelta( hours= inTime.hour, minutes=inTime.minute, seconds= inTime.second)
         outTime_delta = timedelta( hours= outTime.hour, minutes=outTime.minute, seconds= outTime.second)
         print(outTime_delta)
         totalHoursWorked = outTime_delta - inTime_delta
         print(totalHoursWorked)
-        
-        
         attendance.totalHoursWorked = totalHoursWorked
         attendance.save()
-
 
     context = {
         'totalHoursWorked':totalHoursWorked
     }
+
     return render(request, 'attendance/total.html', context)
 
 
