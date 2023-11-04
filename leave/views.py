@@ -1,6 +1,4 @@
-from django.shortcuts import render
-
-from django.shortcuts import render
+from django.shortcuts import render , get_object_or_404
 
 from django.views import View
 from django.views.generic.list import ListView
@@ -68,29 +66,30 @@ class LeaveApplication(View):
            email.content_subtype = 'html'
            email.attach_alternative(html_content, 'text/html')
            email.send()
+           form.save()
 
            return HttpResponse('Email sent successfully')
         
         return render(request, self.template_name, {'form' : form})
     
 
-def LeaveApproveReject(request):
-    
+def LeaveApproveReject(request, id):
+
+
     if request.method == 'POST':
-        if 'approve':
-            leaveChoice = EmployeeLeave.objects.filter(id= EmployeeLeave.id).update(leaveChoice = 'approve')
-            EmployeeLeave.leaveChoice = leaveChoice
-            print(leaveChoice)
-            EmployeeLeave.save()
+        leave_request = get_object_or_404(EmployeeLeave, id=id)
+        print(leave_request)
+        action = request.POST.get('action', '')
+        if action == 'approve':
+            leave_request.status = 'Approved'
+            leave_request.save()
             return HttpResponse("Approved")
-        elif 'reject':
-            leaveChoice = EmployeeLeave.objects.filter(id = EmployeeLeave.id).update(leaveChoice = 'reject')
-            EmployeeLeave.leaveChoice = leaveChoice
-            EmployeeLeave.save()
+        elif action == 'reject':
+            leave_request.status = 'Rejected'
+            leave_request.save()
             return HttpResponse("Rejected")
 
     return render(request, 'leave/manage-leave.html')
-
 
 class ManageLeaveApplication(ListView):
     model = EmployeeLeave
@@ -98,26 +97,7 @@ class ManageLeaveApplication(ListView):
     template_name = 'leave/manage-leave.html'
 
 
-# def SendStatus(request):
 
-#     if request.method == 'POST':
-#         status = request.POST.get("status")
-#         email = request.POST.get("employee")
-#         recipient_name = request.POST.get("employee")
-#         subject = 'Application for leave'
-#         html_template = get_template('leave/leave.html')
-#         html_content = html_template.render({'type': type,'recipient_name' : recipient_name,'status': status })
-#         email = EmailMultiAlternatives(
-#                subject,
-#                'I am writing this to ask for leave in advance.',
-#                settings.EMAIL_HOST_USER,
-#                [email],
-#            )
-#         email.attach_alternative(html_content, 'leave/leave.html')
-#         email.send()
-#         return HttpResponse('Email sent successfully')
-#     return render(request, "leave/manage-leave.html")
-    
 
 
 

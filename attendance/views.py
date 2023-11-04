@@ -29,10 +29,10 @@ class CreateCheckInOutTime(View):
             loggedInUser = request.user.employee  
             today = datetime.today()
 
-            isEntry = Attendance.objects.filter(employee=loggedInUser, date=today).exists()
+            isEntry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).exists()
 
             if isEntry:
-                attendance = Attendance.objects.filter(employee=loggedInUser, date=today)
+                attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
                 for obj in attendance:
                     obj.checkOutTime = timezone.now()
                     obj.save()
@@ -40,7 +40,7 @@ class CreateCheckInOutTime(View):
                 createCheckInTime = Attendance.objects.create(
                     employee=loggedInUser,
                     checkInTime=timezone.now(),
-                    date=today
+                    date=datetime.today()
                 )
                 createCheckInTime.save()
 

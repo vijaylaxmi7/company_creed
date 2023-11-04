@@ -1,10 +1,12 @@
 from datetime import timedelta
 from django.utils import timezone
-from .models import Attendance  # Import your Attendance model here
+from .models import Attendance  
+import datetime
+from datetime import datetime
 
 def TotalWorkingHour(request):
     loggedInUser = request.user.employee
-    attendance = Attendance.objects.filter(employee=loggedInUser, date=timezone.today()).last()
+    attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).last()
     totalHoursWorked = timedelta(hours=0)
     
     if attendance.checkInTime and attendance.checkOutTime:
