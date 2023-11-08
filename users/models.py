@@ -1,7 +1,7 @@
 from django.db import models
 
-# Create your models here.
 
+# Create your models here.
 
 from django.contrib.auth.models  import AbstractUser
 from datetime import date
@@ -10,9 +10,10 @@ from .managers import UserManager
 from django.utils.text import slugify
 
 
+
 class CustomUser(AbstractUser):
 
-   
+
     GENDER_CHOICE = [
         ('MALE', 'Male'),
         ('FEMALE', 'Female'),
@@ -20,8 +21,6 @@ class CustomUser(AbstractUser):
     ]
 
     username = None
-    #groups = None
-    #user_permissions = None
     email = models.EmailField(_('email_address'), unique=True)
     gender = models.CharField(max_length=20, choices= GENDER_CHOICE)
     contact_no = models.CharField(max_length=15)
@@ -30,12 +29,9 @@ class CustomUser(AbstractUser):
     city = models.CharField(max_length=30, null=True)
     state = models.CharField(max_length=30, null=True)
 
-
-    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()
-    # REQUIRED_FIELDS = [ 'first_name', 'last_name', 'contact_no', 'address', 'date_of_birth', 'gender']
 
 
 class Designation(models.Model):
@@ -59,6 +55,7 @@ class Employee(CustomUser):
         ]
     
     is_manager = models.BooleanField(default=False)
+    profile_pic = models.ImageField(upload_to='profile_pics', default='default.jpg')
     technology = models.ManyToManyField(Technology)
     designation = models.ForeignKey(Designation, null=True, on_delete=models.SET_NULL)
     year_of_experience = models.IntegerField(default=0, null=True)

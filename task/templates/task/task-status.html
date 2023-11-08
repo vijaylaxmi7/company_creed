@@ -1,0 +1,23 @@
+{%extends 'users/base.html'%}
+ {% load static %}
+ {% block task %}
+ <link rel="stylesheet" href="{% static 'css/signup.css'%}">
+ {%block welcome%}{%endblock welcome%}
+    
+    <section class="container">
+        <div class="login-container">
+    
+            <div class="form-container">
+                <h1 class="opacity">Task Status</h1>
+    
+                <form action=""  method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p}}
+                    
+                    <button class="opacity">SEND</button>
+                </form>
+            </div>
+         </div>
+     </section>
+
+            {% endblock task %}

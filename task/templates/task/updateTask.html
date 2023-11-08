@@ -1,16 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>update task</title>
-</head>
-<body>
-    <h1>Update Task</h1>
-    <form action="" enctype="multipart/form-data"  method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button class="opacity">UPDATE</button>
-    </form>
-</body>
-</html>
+{%extends 'users/base.html'%}
+ {% load static %}
+ {% block task %}
+ <link rel="stylesheet" href="{% static 'css/signup.css'%}">
+ {%block welcome%}{%endblock welcome%}
+    
+    <section class="container">
+        <div class="login-container">
+    
+            <div class="form-container">
+                <h1 class="opacity">Update Task</h1>
+    
+                <form action="" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p}}
+                    
+                    <button class="opacity">SUBMIT</button>
+                </form>
+            </div>
+         </div>
+     </section>
+
+            {% endblock task %}

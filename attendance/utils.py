@@ -7,18 +7,18 @@ from datetime import datetime
 def TotalWorkingHour(request):
     loggedInUser = request.user.employee
     attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).last()
-    totalHoursWorked = timedelta(hours=0)
+    total_working_hours = timedelta(hours=0)
     
-    if attendance.checkInTime and attendance.checkOutTime:
-        inTime = attendance.checkInTime
-        outTime = attendance.checkOutTime
+    if attendance.checkin_time and attendance.checkout_time:
+        inTime = attendance.checkin_time
+        outTime = attendance.checkout_time
 
         inTime_delta = timedelta(hours=inTime.hour, minutes=inTime.minute, seconds=inTime.second)
         outTime_delta = timedelta(hours=outTime.hour, minutes=outTime.minute, seconds=outTime.second)
 
-        totalHoursWorked = outTime_delta - inTime_delta
+        total_working_hours = outTime_delta - inTime_delta
 
-        attendance.totalHoursWorked = totalHoursWorked
+        attendance.total_working_hours = total_working_hours
         attendance.save()
 
-    return totalHoursWorked
+    return total_working_hours

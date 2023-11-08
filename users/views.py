@@ -2,69 +2,22 @@ from typing import Any
 from django.http import HttpRequest, HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.views import View
-from django.views.generic.edit import FormView
-from users.forms import EmployeeSignupForm, EmployeeSigninForm, ResetPasswordForm, ForgetPasswordForm, ChangePasswordForm, UpdateProfileForm
+from users.forms import EmployeeSignupForm, EmployeeSigninForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-
-from django.core.mail import EmailMessage, get_connection, send_mail
-from django.db.models import Q
-
-from django.contrib.auth import update_session_auth_hash
-import uuid
-from django.conf import settings
-# from .helpers import send_forget_password_mail
 from django.contrib.auth import get_user_model
 User = get_user_model
 
 from users.models import Employee, CustomUser
 from django.views.generic.edit import UpdateView
+from django.shortcuts import render , get_object_or_404
 from django.urls import reverse_lazy
-from task.models import Task
 import datetime
 from django.utils import timezone
 
 
 # Create your views here.
-
-
-class EditProfileView(UpdateView):
-
-    model = Employee
-    fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state','id_proof' , 'id_proof_file']
-    template_name ="users/editProfile.html"
-    success_url = reverse_lazy('index')
-
-    def id(self):
-
-        return self.request.user.id
-
-def home(request):
-    return render(request, "users/home.html")
-
-
-
-def index(request):
-    
-    now = datetime.datetime.now()
-    hour = now.hour
-
-    if hour < 12:
-        greeting = "Good Morning"
-    elif hour < 18:
-        greeting = "Good Afternoon"
-    else:
-        greeting = "Good Evening"
-
-    current_datetime = timezone.now().strftime("%I:%M%p on %B %d, %Y")
-    # current_datetime = timezone.localtime()
-    context = {
-        'current_datetime': current_datetime,
-        'greeting' : greeting}
-    return render(request, "users/index.html", context)
-
 
 class EmployeeSignupForm(View):
 
@@ -112,11 +65,36 @@ class EmployeeSignin(View):
         return render(request, self.template_name, context={'form': form, 'message': message})
 
 
-def myTask(request):
+class EditProfileView(UpdateView):
 
-    task = Task.objects.filter(employee = request.user.employee)
-    context = {'task' : task}
-    return render(request, 'users/my-task.html', context=context)
+    model = Employee
+    fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state','id_proof' , 'id_proof_file']
+    template_name ="users/edit_profile.html"
+    success_url = reverse_lazy('index')
+
+    def id(self):
+        return self.request.user.id
+    
+
+def index(request):
+    
+    now = datetime.datetime.now()
+    hour = now.hour
+
+    if hour < 12:
+        greeting = "Good Morning"
+    elif hour < 18:
+        greeting = "Good Afternoon"
+    else:
+        greeting = "Good Evening"
+
+    current_datetime = timezone.now().strftime("%I:%M%p on %B %d, %Y")
+    # current_datetime = timezone.localtime()
+    context = {
+        'current_datetime': current_datetime,
+        'greeting' : greeting}
+    return render(request, "users/index.html", context)
+
 
 
 def Logout(request):

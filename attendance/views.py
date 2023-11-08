@@ -22,41 +22,116 @@ import locale
 from .utils import TotalWorkingHour
 
 
-
 class CreateCheckInOutTime(View):
     def get(self, request):
         if request.user.is_authenticated:
+            print('yes')
             loggedInUser = request.user.employee  
-            today = datetime.today()
+            print(loggedInUser)
+            isEntry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).order_by('date')
+            print(isEntry)
+            if isEntry.exists():
+                print('inter')
+                isEntry = isEntry[len(isEntry)-1]
+                print(isEntry)
+                if isEntry.checkin_time and isEntry.checkout_time:
+                    print("checkin")
+                    createCheckInTime = Attendance.objects.create(
+                        employee=loggedInUser,
+                        checkin_time=timezone.now(),
+                        date=datetime.today()
+                    )
+                    createCheckInTime.save()
+                elif isEntry.checkin_time:
+                    print("checkout")
+                    isEntry.checkout_time = timezone.now()
+                    isEntry.save()
 
-            isEntry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).exists()
-
-            if isEntry:
-                attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
-                for obj in attendance:
-                    obj.checkOutTime = timezone.now()
-                    obj.save()
-            else:
+            else: 
+                print('checkin')
                 createCheckInTime = Attendance.objects.create(
-                    employee=loggedInUser,
-                    checkInTime=timezone.now(),
-                    date=datetime.today()
-                )
+                        employee=loggedInUser,
+                        checkin_time=timezone.now(),
+                        date=datetime.today()
+                    )
                 createCheckInTime.save()
 
-            totalHoursWorked = TotalWorkingHour(request)
+
+            
+                    
+            # attendance = Attendance.objects.get(employee = loggedInUser, date = datetime.today())
+            # for attendance in isEntry:
+            #      if attendance.checkInTime and attendance.checkOutTime:
+            #         createCheckInTime = Attendance.objects.create(
+            #         employee=loggedInUser,
+            #         checkInTime=timezone.now(),
+            #         date=datetime.today()
+            #     )
+            #         createCheckInTime.save()
+            #         break
+
+
+            # total_working_hours = TotalWorkingHour(request)
 
             return HttpResponse('success')
         
         return render(request, 'users/index.html')  
-        
-
+    
 
 class CheckInOutStatus(ListView):
      
      model = Attendance
-     fields = ['employee', 'checkInTime', 'checkOutTime', 'date']
+     fields = ['employee', 'checkin_time', 'checkout_time', 'date']
      template_name = 'attendance/check-in-out.html'
+     paginate_by = 1
+
+     def get_queryset(self):
+        return Attendance.objects.all().order_by('-checkin_time').values()
+
+        
+
+
+# class CreateCheckInOutTime(View):
+#     def get(self, request):
+#         if request.user.is_authenticated:
+#             loggedInUser = request.user.employee  
+#             isEntry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
+
+#             if isEntry.exists():
+#                 attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
+#                 for obj in attendance:
+#                     obj.checkOutTime = timezone.now()
+#                     obj.save()
+#             else:
+#                     createCheckInTime = Attendance.objects.create(
+#                         employee=loggedInUser,
+#                         checkInTime=timezone.now(),
+#                         date=datetime.today()
+#                     )
+#                     createCheckInTime.save()
+                    
+#             # attendance = Attendance.objects.get(employee = loggedInUser, date = datetime.today())
+#             for attendance in isEntry:
+#                  if attendance.checkInTime and attendance.checkOutTime:
+#                     createCheckInTime = Attendance.objects.create(
+#                     employee=loggedInUser,
+#                     checkInTime=timezone.now(),
+#                     date=datetime.today()
+#                 )
+#                     createCheckInTime.save()
+#                     break
+
+
+#             totalHoursWorked = TotalWorkingHour(request)
+
+#             return HttpResponse('success')
+        
+#         return render(request, 'users/index.html')  
+        
+
+
+
+
 
 
 

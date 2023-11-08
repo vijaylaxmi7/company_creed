@@ -9,10 +9,9 @@ from django.views.generic.edit import DeleteView
 from .forms import leaveApplicationForm
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse, request
-from .models import EmployeeLeave
-from users.models import Employee, CustomUser
+from .models import EmployeeLeave, LeaveBalance
+from users.models import Employee
 from users.views import index
-from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 
 from django.core.mail import EmailMessage, get_connection, send_mail
@@ -29,7 +28,7 @@ from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-
+from django.db.models import Count
 
 # Create your views here.
 
@@ -50,13 +49,13 @@ class LeaveApplication(View):
            by = request.user.employee
            email = form.cleaned_data['manager']
            reason = form.cleaned_data['reason']
-           startDate = form.cleaned_data['startDate']
-           endDate = form.cleaned_data['endDate']
-           leaveChoice = form.cleaned_data['leaveChoice']
+           start_date = form.cleaned_data['start_date']
+           end_date = form.cleaned_data['end_date']
+           leave_choice = form.cleaned_data['leave_choice']
            subject = 'Application for leave'
            recipient_name = form.cleaned_data['manager']
            html_template = get_template('leave/leave.html')
-           html_content = html_template.render({'type': type,'recipient_name' : recipient_name,'reason': reason, 'startDate':startDate,'endDate' : endDate, 'leaveChoice' :  leaveChoice, 'by' : by })
+           html_content = html_template.render({'type': type,'recipient_name' : recipient_name,'reason': reason, 'start_date':start_date,'end_date' : end_date, 'leave_choice' :  leave_choice, 'by' : by })
            email = EmailMultiAlternatives(
                subject,
                'I am writing this to ask for leave in advance.',
@@ -73,8 +72,32 @@ class LeaveApplication(View):
         return render(request, self.template_name, {'form' : form})
     
 
-def LeaveApproveReject(request, id):
+class MyLeave(ListView):
+    model = EmployeeLeave
+    template_name = 'leave/my-leave.html'
 
+def LeaveBalanceView(request):
+
+    leave_allowed = 18
+    loggedInUser = request.user.employee
+    print(loggedInUser)
+    leave_taken = EmployeeLeave.objects.filter(employee = loggedInUser, status = 'Approved')
+    print(leave_taken)
+    leave_remain = leave_allowed - leave_taken
+    leavebalance = LeaveBalance.objects.filter(employee = loggedInUser)
+    
+    leavebalance.leave_taken = leave_taken
+    
+    context = {
+        'leave_allowed' : leave_allowed,
+        'leave_taken' : leave_taken,
+        'leave_remain' : leave_remain,
+    }
+
+    return render(request, 'leave/leave-balance.html', context)
+
+
+def LeaveApproveReject(request, id):
 
     if request.method == 'POST':
         leave_request = get_object_or_404(EmployeeLeave, id=id)
@@ -83,13 +106,14 @@ def LeaveApproveReject(request, id):
         if action == 'approve':
             leave_request.status = 'Approved'
             leave_request.save()
-            return HttpResponse("Approved")
+            return HttpResponseRedirect('/leave/manage-leave/')
         elif action == 'reject':
             leave_request.status = 'Rejected'
             leave_request.save()
-            return HttpResponse("Rejected")
+            return HttpResponseRedirect('/leave/manage-leave/')
 
     return render(request, 'leave/manage-leave.html')
+
 
 class ManageLeaveApplication(ListView):
     model = EmployeeLeave

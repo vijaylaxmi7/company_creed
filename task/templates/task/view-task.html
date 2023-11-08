@@ -4,25 +4,17 @@
 
   <link rel="stylesheet" href="{% static 'css/task.css'%}">
     <h1>Assigned Tasks</h1>
-     {% comment %} {% for task in object_list %}
-
-    {{task.task}}
-    <br><br>
-    {{task.description}}
-    <br><br>
-    {% endfor %}  {% endcomment %}
     {%block welcome%}{%endblock welcome%}
 
      <ul> 
-    
         {% for object in object_list %} 
-        
         <li><b>Task : </b> {{ object.task }}</li> 
         <li><b>Assigned to : </b>  {{ object.employee.first_name}}</li> 
         <li><b>Project : </b> {{ object.project}}</li> 
         <li><b>Start date : </b>{{ object.start_date}}</li> 
         <li><b>Estimate date : </b>{{ object.estimate_date }}</li> 
         <li><b>Description : </b>{{ object.description }}</li> 
+        <li><b>Status : </b>{{ object.status }}</li> 
         <li><b>Attachment : </b>{{ object.file_attachment }}</li> 
         <a href="{% url 'update-task' object.id %}">Update</a> 
         <a href="{% url 'delete-task' object.id %}">Delete</a>
@@ -34,41 +26,6 @@
         {% endfor %} 
         
         </ul>  
-    <!-- <thead>
-        <tr>
-          {% for object in object_list %}
-          <th><li>{{ object.task }}</li> 
-            <li>{{ object.description }}</li> </th>
-          {% endfor %}
-        </tr>
-      </thead> -->
-
-      {% comment %} <table>
-        <thead>
-        <tr>
-          <th>Task</th>
-          <th>Assigned by</th>
-          <th>Project</th>
-          <th>Start date</th>
-          <th>Estimate date</th>
-          <th>Description</th>
-          <th>Attachment</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for object in object_list %} 
-        <tr>
-          <td>{{ object.task }}</td>
-          <td>{{ object.manager.first_name}}</td>
-          <td>{{ object.project }}</td>
-          <td>{{ object.start_date }}</td>
-          <td>{{ object.estimate_date}}</td>
-          <td>{{ object.description }}</td>
-          <td>{{ object.file_attachment}}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-      </table> {% endcomment %}
-    
+   
       {% endblock task %}
 

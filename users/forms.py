@@ -9,19 +9,17 @@ class EmployeeSignupForm(UserCreationForm):
 
     class Meta:
         model = Employee
-        fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state',   'id_proof' , 'id_proof_file']
+        fields = [ 'profile_pic','first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state',   'id_proof' , 'id_proof_file']
         exclude = ['']
-        # fields = "__all__"
-
         widgets = {
-            'date_of_birth' : SelectDateWidget(),
+            'date_of_birth' : DateInput(attrs={'type': 'date'}),
+            
         }
 
-
-
+        
 class EmployeeSigninForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'custom-input'}))
-    password = forms.CharField(widget=forms.TextInput(attrs={'class': 'custom-input'}))
+    password = forms.CharField(widget=forms.PasswordInput)
 
 
 
@@ -32,25 +30,15 @@ class SendMailForm(forms.Form):
     message : forms.Textarea()
 
 
-class ResetPasswordForm(forms.Form):
-    oldPassword  = forms.CharField()
-    newPassword  = forms.CharField()
-
-
-class ChangePasswordForm(forms.Form):
-    newPassword = forms.CharField()
-    confirmPassword = forms.CharField()
-
-class ForgetPasswordForm(forms.Form):
-
-    email = forms.EmailField()
-
-class UpdateProfileForm(forms.Form):
+class UpdateProfileForm(forms.ModelForm):
 
     class Meta:
         model = Employee
-        fields = [ 'first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state',  'technology',  'id_proof' , 'id_proof_file']
+        fields = ['first_name', 'last_name', 'email','contact_no','date_of_birth','address', 'gender', 'city', 'state',  'technology',  'id_proof' , 'id_proof_file']
         exclude = ['']
+
+    def _init_(self, *args, **kwargs):
+        super(UpdateProfileForm, self)._init_(*args, **kwargs)
 
     
 

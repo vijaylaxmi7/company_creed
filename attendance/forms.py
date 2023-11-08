@@ -8,5 +8,5 @@ class AttendanceForm(forms.ModelForm):
         model = Attendance
         fields = '__all__'
         widgets = {
-                'totalHoursWorked' : forms.TextInput(attrs={'placeholder' : 'HH:MM:SS'})
+                'total_working_hours' : forms.TextInput(attrs={'placeholder' : 'HH:MM:SS'})
         }

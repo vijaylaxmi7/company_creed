@@ -6,7 +6,6 @@
 {%block welcome%}{%endblock welcome%}
 
     <h1>My Tasks</h1>
-    
       <table>
         <thead>
         <tr>
@@ -15,8 +14,8 @@
           <th>Project</th>
           <th>Start date</th>
           <th>Estimate date</th>
-          <th>Description</th>
-          <th>Attachment</th>
+          {% comment %} <th>Description</th>
+          <th>Attachment</th> {% endcomment %}
         </tr>
     </thead>
     <tbody>
@@ -27,8 +26,13 @@
           <td>{{ object.project }}</td>
           <td>{{ object.start_date }}</td>
           <td>{{ object.estimate_date}}</td>
-          <td>{{ object.description }}</td>
-          <td>{{ object.file_attachment}}</td>
+          {% comment %} <td>{{ object.description }}</td>
+          <td>{{ object.file_attachment}}</td> {% endcomment %}
+
+          <td>
+            <a href="{% url 'task-detail' object.pk %}" class="btn btn-primary">View Detail</a>
+        </td>
+
         </tr>
         {% endfor %}
     </tbody>

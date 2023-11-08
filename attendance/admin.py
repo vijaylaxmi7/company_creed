@@ -17,7 +17,7 @@ from django.utils import timezone
 
 
 class AttendanceAdmin(admin.ModelAdmin):
-    list_display = ('employee', 'date', 'checkInTime', 'checkOutTime', 'totalHoursWorked')
+    list_display = ('id','employee', 'date', 'checkin_time', 'checkout_time', 'total_working_hours')
 
 
 admin.site.register(Attendance, AttendanceAdmin)

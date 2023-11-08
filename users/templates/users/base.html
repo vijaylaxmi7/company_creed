@@ -11,10 +11,11 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/home.css'%}">
+  <script src="{% static 'users/js/index.js' %}"></script>
 
   <style>
-  
   </style>
+
 </head>
 
 <body>
@@ -31,10 +32,11 @@
       <span class="glyphicon glyphicon-check"></span> Attendance
     </a>
     <div id="myDropdown" class="dropdown-content">
-      <a href="#">Send Status</a>
       <a href="#">Apply Leaves</a>
       <a href="#">My Leaves</a>
+      {% if request.user.employee.is_manager %}
       <a href="{% url 'check-in-out' %}">Check-in/ Check-out</a>
+      {%endif%}
     </div>
 
 
@@ -46,12 +48,11 @@
       <a href="#">Assign calls</a>
       <a href="{% url 'task-assignment' %}">Assign tasks</a>
       <a href="{% url 'view-task' %}">View assigned Task</a>
-      <a href="#">View calls</a>
       <a href="{% url 'my-task' %}">View tasks</a>
+      <a href="{%url 'task-status'%}">Send Task Status</a>
     </div>
     {% else %}
     <div id="taskDropdown" class="dropdown-content">
-      <a href="#">View calls</a>
       <a href="{% url 'my-task' %}">View tasks</a>
     </div>
     {% endif %}
@@ -63,25 +64,17 @@
     {% if request.user.employee.is_manager %}
     <div id="leaveDropdown" class="dropdown-content">
       <a href="{% url 'leave-application' %}">Apply Leaves</a>
-      <a href="#">My Leaves</a>
+      <a href="{% url 'my-leave' %}">My Leaves</a>
+      <a href="{% url 'leave-balance' %}">Leave Balance</a>
       <a href="{% url 'leave-manage' %}">Manage leave applications</a>
     </div>
     {% else %}
-    <div id="taskDropdown" class="dropdown-content">
-      <a href="#">Apply Leaves</a>
-      <a href="#">My Leaves</a>
+    <div id="leaveDropdown" class="dropdown-content">
+      <a href="{% url 'leave-application' %}">Apply Leaves</a>
+      <a href="{% url 'my-leave' %}">My Leaves</a>
+      <a href="{% url 'leave-balance' %}">Leave Balance</a>
     </div>
     {% endif %}
-
-
-
-    {% if request.user.employee.is_manager %}
-    <a onmouseenter="taskFunction()">
-      <span class="glyphicon glyphicon-user"></span> Employee List
-    </a>
-    {% endif %}
-
-   
 
     <a href="/logout/" onmouseenter="dashboardFunction()">
       <span class="glyphicon glyphicon-log-in"></span> Logout
@@ -101,7 +94,7 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
-            <!-- Search Bar -->
+  
             <li>
               <form class="navbar-form" role="search">
                 <div class="input-group">
@@ -116,21 +109,31 @@
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-          
             <div class="dropdown">
-              <button onmouseenter="profileFunction()" class="dropbtn">{{request.user.employee.first_name}}
-                {{request.user.employee.last_name}}</span><span
-                  class="glyphicon glyphicon-triangle-bottom"></span></button>
-              <div id="myDropdown1" class="dropdown-content">
-                <a href="#">Change status</a>
-                <a href="{% url 'edit-profile' request.user.employee.id %}">Edit Profile</a>
-                <a href="#">View Salary slip</a>
-                <li><a href="/password_reset/"><span class=""></span>Reset password</a></li>
-                <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a>
-                </li>
-              </div>
-          
-          </ul>
+                <button onmouseenter="profileFunction()" class="dropbtn" style="
+                border-radius: 25px;
+                height: 41px;
+                padding: 0px 0px;
+                position: relative;
+                bottom: 1px;
+            ">
+                {% comment %} <div class="user-circle">{{ request.user.employee.first_name|first|upper }}{{ request.user.employee.last_name|first|upper }}</div> {% endcomment %}
+                <div class="user-circle"><img  style = "
+                  max-height: 44px; max-width:44px; border-radius: 25px;" src = "{{request.user.employee.profile_pic.url}}"></div>
+                <span class="glyphicon glyphicon-triangle-bottom"></span>
+                </button>
+                <div id="myDropdown1" class="dropdown-content" style="
+                top: 62px;
+                right: -11px;
+            ">
+            {% comment %} <center><div class="user-circle"><img  style = " {% endcomment %}
+              {% comment %} max-height: 60px; border-radius: 25px;" src = "{{request.user.employee.profile_pic.url}}"></div></center> {% endcomment %}
+                    <a href="{% url 'edit-profile' request.user.employee.id %}">Edit Profile</a>
+                    <li><a href="/password_reset/"><span class=""></span>Reset password</a></li>
+                    <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                </div>
+            </div>
+        </ul>
         </div>
       </div>
     </nav>
@@ -154,13 +157,14 @@
     
     {% block task %}
     {% endblock task %}
+
+
+
+    
   </div>
 
+<script>
 
-
-  
-
-  <script>
     function attendanceFunction() {
       document.getElementById("myDropdown").classList.toggle("show");
     }
@@ -211,6 +215,7 @@
       }
     }
 
+
     function leaveFunction() {
       document.getElementById("leaveDropdown").classList.toggle("show");
     }
@@ -226,54 +231,49 @@
         }
       }
     }
-  </script>
 
 
-  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const button = document.getElementById('checkInOutButton');
+    const storedState = localStorage.getItem('checkInOutState');
 
-document.addEventListener('DOMContentLoaded', function () {
-  const button = document.getElementById('checkInOutButton');
-  const storedState = localStorage.getItem('checkInOutState');
+    if (storedState === 'check-out') {
+        button.textContent = 'Check Out';
+        button.dataset.action = 'check-out';
+    } else {
+        button.textContent = 'Check In';
+        button.dataset.action = 'check-in';
+    }
+  });
 
-  if (storedState === 'check-out') {
-      button.textContent = 'Check Out';
-      button.dataset.action = 'check-out';
-  } else {
-      button.textContent = 'Check In';
-      button.dataset.action = 'check-in';
+  function toggleCheckInOut() {
+    const button = document.getElementById('checkInOutButton');
+    const action = button.dataset.action;
+    const url = action === 'check-in' ? "{% url 'check-in' %}" : "{% url 'check-out' %}";
+
+    fetch(url)
+        .then(response => response.text())
+        .then(data => {
+            console.log(data);
+            if (action === 'check-in') {
+                button.textContent = 'Check Out';
+                button.dataset.action = 'check-out';
+            } else {
+                button.textContent = 'Check In';
+                button.dataset.action = 'check-in';
+            }
+            localStorage.setItem('checkInOutState', button.dataset.action);
+        });
   }
-});
 
-function toggleCheckInOut() {
-  const button = document.getElementById('checkInOutButton');
-  const action = button.dataset.action;
-  const url = action === 'check-in' ? "{% url 'check-in' %}" : "{% url 'check-out' %}";
-
-  fetch(url)
-      .then(response => response.text())
-      .then(data => {
-          console.log(data);
-          if (action === 'check-in') {
-              button.textContent = 'Check Out';
-              button.dataset.action = 'check-out';
-          } else {
-              button.textContent = 'Check In';
-              button.dataset.action = 'check-in';
-          }
-
-          
-          localStorage.setItem('checkInOutState', button.dataset.action);
-      });
-}
+</script>
   
-  </script>
   {%else%}
 
   {% block signin %}
-    {% endblock signin %}
-
+  {% endblock signin %}
   
-{%endif%}
+  {%endif%}
 
 </body>
 </html>

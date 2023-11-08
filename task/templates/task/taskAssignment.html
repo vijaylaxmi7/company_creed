@@ -3,15 +3,7 @@
  {% block task %}
  <link rel="stylesheet" href="{% static 'css/signup.css'%}">
  {%block welcome%}{%endblock welcome%}
-    {% comment %} <form action=""   enctype="multipart/form-data"  method="post">
-        {% csrf_token %}
-        {{ form.as_p}}
-        <input type="submit" value="submit">
-    </form>
-    {% endblock task %} {% endcomment %}
-
-
-
+    
     <section class="container">
         <div class="login-container">
     
@@ -24,11 +16,8 @@
                     
                     <button class="opacity">SUBMIT</button>
                 </form>
-    
-               
-                
             </div>
-            </div>
-            </section>
+         </div>
+     </section>
 
             {% endblock task %}

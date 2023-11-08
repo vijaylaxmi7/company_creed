@@ -9,14 +9,14 @@ class leaveApplicationForm(forms.ModelForm):
         
     class Meta:
         model = EmployeeLeave
-        fields = ['startDate', 'endDate', 'type', 'leaveChoice', 'reason', 'manager']
+        fields = ['start_date', 'end_date', 'type', 'leave_choice', 'reason', 'manager']
         labels = {
             'manager' : 'Mail to'
         }
 
         widgets = {
-            'startDate' : SelectDateWidget(),
-            'endDate'  : SelectDateWidget()
+            'start_date' : SelectDateWidget(),
+            'end_date'  : SelectDateWidget()
         }
 
         exclude = ['employee', 'status']
