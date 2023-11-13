@@ -1,40 +1,17 @@
-from django.shortcuts import render , get_object_or_404
-
+from django.conf import settings
+from django.shortcuts import render, get_object_or_404
+from django.template.loader import get_template
 from django.views import View
 from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView
-from django.views.generic.edit import DeleteView
-
-from .forms import leaveApplicationForm
-from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse, request
+from .forms import LeaveApplicationForm
+from django.http import HttpResponseRedirect, HttpResponse
 from .models import EmployeeLeave, LeaveBalance
-from users.models import Employee
-from users.views import index
-from django.shortcuts import redirect
-
-from django.core.mail import EmailMessage, get_connection, send_mail
-from django.template import Context, Template, RequestContext
-
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.conf import settings
-import uuid
-
-from users.helpers import send_leave_email
-
-from django.core.mail import send_mail
-from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
-from django.conf import settings
-from django.db.models import Count
 
 # Create your views here.
 
-
 class LeaveApplication(View):
-    form = leaveApplicationForm
+    form = LeaveApplicationForm
     template_name = 'leave/leave-application.html'
 
     def get(self, request):

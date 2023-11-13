@@ -4,22 +4,15 @@ from django.contrib import admin
 
 
 from django.contrib import admin
-from .models import Attendance
-from django import forms
-from django.forms import widgets
-from .forms import AttendanceForm
-from django.utils import timezone
-
-
-
-# Register your models here.
-
-
+from .models import Attendance, TotalWorkingHours
 
 class AttendanceAdmin(admin.ModelAdmin):
-    list_display = ('id','employee', 'date', 'checkin_time', 'checkout_time', 'total_working_hours')
+    list_display = ('id','employee', 'date', 'checkin_time', 'checkout_time', 'time_difference')
 
+class TotalWorkingHoursAdmin(admin.ModelAdmin):
+    list_display = ('id', 'employee',  'date', 'work_hours')
 
 admin.site.register(Attendance, AttendanceAdmin)
+admin.site.register(TotalWorkingHours, TotalWorkingHoursAdmin)
 
 

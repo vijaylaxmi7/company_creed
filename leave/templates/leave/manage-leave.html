@@ -25,18 +25,6 @@
           <button type="submit" name="action" value="reject">Reject</button>
           {%endif%}
       </form>
-      
-          {% comment %} <div class = "status">
-          <label for = "id_status"> Status</lable>
-          <select name = "status" id = "id_status">
-            <option value = "Pending">Pending</option>
-            <option value = "Aproved">Approved</option>
-            <option value = "Rejected">Rejected</option>
-          </select>
-          <a href = "{%url 'send-status' %}"><button class="opacity">UPDATE</button></a> {% endcomment %}
-
-
-
         <hr/> 
         {% empty %} 
         <li>No objects yet.</li> 
@@ -45,26 +33,4 @@
         </ul>  
     
       {% endblock task %}
-
-
-
-
-
-<script>
-      function statusFunction() {
-        document.getElementById("statusDropdown").classList.toggle("show");
-      }
-      window.onclick = function (event) {
-        if (!event.target.matches('.dropbtn')) {
-          var dropdowns = document.getElementsByClassName("dropdown-content");
-          var i;
-          for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-              openDropdown.classList.remove('show');
-            }
-          }
-        }
-      }
-    </script>
 

@@ -1,57 +1,68 @@
-{%extends 'users/base.html'%}
+{% extends 'users/base.html' %}
 {% load static %}
-{% block task %}
-<link rel="stylesheet" href="{% static 'css/my-task.css'%}">
 
-{%block welcome%}{%endblock welcome%}
+{% block task %}
+    <link rel="stylesheet" href="{% static 'css/my-task.css' %}">
+
+    {% block welcome %}{% endblock welcome %}
 
     <h1>Check-In/Out Status</h1>
-      <table>
+    <form class="d-flex" role="search" action="{% url 'check-in-out' %}" method="GET">
+        {% csrf_token %}
+        <div class="input-group">
+            <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search"
+                name="search_query"
+                required aria-label="Search"
+                style="width: 300px"
+            >
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </div>
+    </form>
+
+    <table>
         <thead>
         <tr>
-          <th>ID</th>
-          <th>Employee</th>
-          <th>Check-in time</th>
-          <th>Check-out time</th>
-          <th>Date</th>
-          <th>Total Hours</th>
+            <th>ID</th>
+            <th>Employee</th>
+            <th>Check-in time</th>
+            <th>Check-out time</th>
+            <th>Date</th>
+            <th>Total Time</th>
         </tr>
-    </thead>
-  <tbody>
-        {% for object in object_list %} 
-        <tr>
-          <td>{{ object.id }}</td>
-          <td>{{ object.employee.first_name }}</td>
-          <td>{{ object.checkin_time}}</td>
-          <td>{{ object.checkout_time }}</td>
-          <td>{{ object.date }}</td>
-          <td>{{ object.total_working_hours}}</td>
-        </tr>
+        </thead>
+        <tbody>
+        {% for data in object_list %}
+            <tr>
+                <td>{{ data.id }}</td>
+                <td>{{ data.employee.first_name }}</td>
+                <td>{{ data.checkin_time }}</td>
+                <td>{{ data.checkout_time }}</td>
+                <td>{{ data.date }}</td>
+                <td>{{ data.time_difference }}</td>
+            </tr>
         {% endfor %}
+        </tbody>
+    </table>
 
-        <div class="pagination">
-          <span class="step-links">
-              {% if page_obj.has_previous %}
-                  <a href="?page=1">&laquo; first</a>
-                  <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-              {% endif %}
-      
-              <span class="current">
-                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-              </span>
-      
-              {% if page_obj.has_next %}
-                  <a href="?page={{ page_obj.next_page_number }}">next</a>
-                  <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-              {% endif %}
-          </span>
-      </div>
-    </tbody>
-  </table>
-    
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
 
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
 
-      {% endblock task %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 
-      
-
+{% endblock task %}

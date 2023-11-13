@@ -1,9 +1,8 @@
 from .models import Attendance
 from django import forms
-from django.forms import widgets
 
 class AttendanceForm(forms.ModelForm):
-    # exclude = ['']
+    
     class Meta:
         model = Attendance
         fields = '__all__'

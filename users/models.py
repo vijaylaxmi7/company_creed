@@ -1,18 +1,9 @@
 from django.db import models
-
-
-# Create your models here.
-
 from django.contrib.auth.models  import AbstractUser
-from datetime import date
 from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
-from django.utils.text import slugify
-
-
 
 class CustomUser(AbstractUser):
-
 
     GENDER_CHOICE = [
         ('MALE', 'Male'),
@@ -33,19 +24,18 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
     objects = UserManager()
 
-
 class Designation(models.Model):
-    designation=models.CharField(max_length=50)
+    name=models.CharField(max_length=50, null=True)
 
     def __str__(self):
-        return self.designation
+        return self.name
 
 
 class Technology(models.Model):
-    technologies=models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.technologies
+        return self.name
 
 class Employee(CustomUser):
     ID_PROOF_CHOICE = [

@@ -1,0 +1,29 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block signin %}
+  {% block welcome %}{% endblock welcome %}
+  <link rel="stylesheet" href="{% static 'css/signup1.css' %}">
+  <section class="container">
+    <div class="login-container">
+      <div class="form-container">
+        <h1 class="opacity">Employee Signup</h1>
+
+        <form action="" enctype="multipart/form-data" method="POST">
+          {% csrf_token %}
+          
+          {% for field in form %}
+            <div class="form-field">
+              {{ field.label_tag }} {{ field }}
+              {% if field.errors %}
+                <div class="error-message">{{ field.errors|first }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          
+          <button class="opacity">SUBMIT</button>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock signin %}

@@ -1,10 +1,10 @@
 {% extends 'users/base.html' %}
 {% load static %}
 {% block task %}
+{% block welcome %}{% endblock welcome %}
 <link rel="stylesheet" href="{% static 'css/task.css' %}">
 <div class="task-details">
     <h1>Task</h1>
-    {% block welcome %}{% endblock welcome %}
     <ul>
         <li><b>Task:</b> {{ object.task }}</li>
         <li><b>Assigned to:</b> {{ object.manager.first_name }} {{ object.manager.last_name }}</li>
@@ -13,10 +13,10 @@
         <li><b>Estimate date:</b> {{ object.estimate_date }}</li>
         <li><b>Description:</b> {{ object.description }}</li>
         <li><b>Attachment:</b> <a href = "{{object.file_attachment.url}}">{{ object.file_attachment }}</li></a>
-        {% comment %} <form method="post" action="">
+        <form method="post" action="">
             {% csrf_token %}
-            <button type="submit" name="action" value="approve"><a href = "{%url 'task-status'%}">Send Status</button>
-        </form> {% endcomment %}
+            <button type="submit" ><a href = "{%url 'update-task-status' object.id %}">Send Status</button>
+        </form>
     </ul>
 </div>
 <style>

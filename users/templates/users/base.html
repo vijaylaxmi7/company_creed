@@ -12,13 +12,10 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/home.css'%}">
   <script src="{% static 'users/js/index.js' %}"></script>
-
-  <style>
-  </style>
-
 </head>
 
 <body>
+
   {% if user.employee.is_authenticated %}
   <div id="sidenav" class="sidenav">
     <div class="logo">
@@ -32,13 +29,14 @@
       <span class="glyphicon glyphicon-check"></span> Attendance
     </a>
     <div id="myDropdown" class="dropdown-content">
-      <a href="#">Apply Leaves</a>
-      <a href="#">My Leaves</a>
+      <a href="{%url "user-check-in-out"%}">Check-in/ Check-out </a>
+      <a href="{%url "user-work-hour"%}">Working Hour</a>
       {% if request.user.employee.is_manager %}
-      <a href="{% url 'check-in-out' %}">Check-in/ Check-out</a>
+      <a href="{% url 'check-in-out' %}"> Employee Check-in/ Check-out</a>
+      <a href="{% url 'total-working-hours' %}">Employee Working Hour</a>
+
       {%endif%}
     </div>
-
 
     <a onmouseenter="taskFunction()">
       <span class="glyphicon glyphicon-tasks"></span> Task/Call
@@ -49,14 +47,12 @@
       <a href="{% url 'task-assignment' %}">Assign tasks</a>
       <a href="{% url 'view-task' %}">View assigned Task</a>
       <a href="{% url 'my-task' %}">View tasks</a>
-      <a href="{%url 'task-status'%}">Send Task Status</a>
     </div>
     {% else %}
     <div id="taskDropdown" class="dropdown-content">
       <a href="{% url 'my-task' %}">View tasks</a>
     </div>
     {% endif %}
-
 
     <a onmouseenter="leaveFunction()">
       <span class="glyphicon glyphicon-tasks"></span> Manage Leave
@@ -95,7 +91,7 @@
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
   
-            <li>
+            {% comment %} <li>
               <form class="navbar-form" role="search">
                 <div class="input-group">
                   <input type="text" class="form-control" placeholder="Search" name="q">
@@ -106,8 +102,9 @@
                   </div>
                 </div>
               </form>
-            </li>
+            </li> {% endcomment %}
           </ul>
+
           <ul class="nav navbar-nav navbar-right">
             <div class="dropdown">
                 <button onmouseenter="profileFunction()" class="dropbtn" style="
@@ -117,7 +114,6 @@
                 position: relative;
                 bottom: 1px;
             ">
-                {% comment %} <div class="user-circle">{{ request.user.employee.first_name|first|upper }}{{ request.user.employee.last_name|first|upper }}</div> {% endcomment %}
                 <div class="user-circle"><img  style = "
                   max-height: 44px; max-width:44px; border-radius: 25px;" src = "{{request.user.employee.profile_pic.url}}"></div>
                 <span class="glyphicon glyphicon-triangle-bottom"></span>
@@ -133,7 +129,7 @@
                     <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
                 </div>
             </div>
-        </ul>
+          </ul>
         </div>
       </div>
     </nav>
@@ -157,10 +153,6 @@
     
     {% block task %}
     {% endblock task %}
-
-
-
-    
   </div>
 
 <script>
@@ -180,7 +172,6 @@
         }
       }
     }
-
 
     function profileFunction() {
       document.getElementById("myDropdown1").classList.toggle("show");
@@ -215,7 +206,6 @@
       }
     }
 
-
     function leaveFunction() {
       document.getElementById("leaveDropdown").classList.toggle("show");
     }
@@ -231,7 +221,6 @@
         }
       }
     }
-
 
   document.addEventListener('DOMContentLoaded', function () {
     const button = document.getElementById('checkInOutButton');
@@ -272,7 +261,7 @@
 
   {% block signin %}
   {% endblock signin %}
-  
+
   {%endif%}
 
 </body>

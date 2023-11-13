@@ -1,11 +1,11 @@
 from django import forms
 from django.forms import ModelForm
-from django.forms.widgets import SelectDateWidget, DateInput
+from django.forms.widgets import SelectDateWidget
 from .models import EmployeeLeave
 from users.models import Employee
 
 
-class leaveApplicationForm(forms.ModelForm):
+class LeaveApplicationForm(forms.ModelForm):
         
     class Meta:
         model = EmployeeLeave

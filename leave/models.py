@@ -30,7 +30,6 @@ class EmployeeLeave(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
   
-
 class LeaveBalance(models.Model):
     
     leave = models.ForeignKey(EmployeeLeave, on_delete=models.CASCADE)
