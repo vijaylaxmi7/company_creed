@@ -7,7 +7,8 @@
     {% block welcome %}{% endblock welcome %}
 
     <h1>Check-In/Out Status</h1>
-    <form class="d-flex" role="search" action="{% url 'user-check-in-out' %}" method="GET">
+    
+    <form class="d-flex" role="search" action="{% url 'check-in-out' %}" method="GET">
         {% csrf_token %}
         <div class="input-group">
             <input
@@ -21,10 +22,11 @@
             <button class="btn btn-outline-success" type="submit">Search</button>
         </div>
     </form>
-
+    
     <table>
         <thead>
         <tr>
+            <th>Employee</th>
             <th>Check-in time</th>
             <th>Check-out time</th>
             <th>Date</th>
@@ -34,6 +36,7 @@
         <tbody>
         {% for data in attendance %}
             <tr>
+                <td>{{ data.employee.first_name }}</td>
                 <td>{{ data.checkin_time }}</td>
                 <td>{{ data.checkout_time }}</td>
                 <td>{{ data.date }}</td>

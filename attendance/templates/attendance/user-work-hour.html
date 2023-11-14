@@ -6,8 +6,9 @@
 
     {% block welcome %}{% endblock welcome %}
 
-    <h1>Check-In/Out Status</h1>
-    <form class="d-flex" role="search" action="{% url 'check-in-out' %}" method="GET">
+    <h1>Work Hour Status</h1>
+
+    <form class="d-flex" role="search" action="{% url 'total-working-hours' %}" method="GET">
         {% csrf_token %}
         <div class="input-group">
             <input
@@ -25,7 +26,6 @@
     <table>
         <thead>
         <tr>
-            
             <th>Date</th>
             <th>Work Hours</th>
         </tr>
@@ -33,7 +33,6 @@
         <tbody>
         {% for data in work_hour %}
             <tr>
-        
                 <td>{{ data.date }}</td>
                 <td>{{ data.work_hours }}</td>
             </tr>

@@ -5,7 +5,9 @@ from django.views.generic.list import ListView
 from django.http import HttpResponse
 from .models import Attendance, TotalWorkingHours
 from .utils import total_working_hour, total_working_hour_of_day
+
 import datetime
+from datetime import datetime
 
 class CreateCheckInOutTimeView(View):
 
@@ -13,9 +15,9 @@ class CreateCheckInOutTimeView(View):
         
         if request.user.is_authenticated:
             loggedInUser = request.user.employee  
-            is_entry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).order_by('date')
+            is_entry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
             if is_entry.exists():
-                is_entry = is_entry[len(is_entry)-1]
+                is_entry = is_entry.last()
                 if is_entry.checkin_time and is_entry.checkout_time:
                     createCheckInTime = Attendance.objects.create(
                         employee=loggedInUser,
@@ -43,7 +45,7 @@ class EmployeeCheckInOutView(ListView):
     model = Attendance
     fields = ['employee', 'checkin_time', 'checkout_time', 'date']
     template_name = 'attendance/check-in-out.html'
-    paginate_by = 5
+    paginate_by = 10
     ordering = ['-date']
 
     def get_queryset(self):
@@ -70,7 +72,10 @@ class UserCheckInOutView(ListView):
     paginate_by = 10  
 
     def get_queryset(self):
-        return Attendance.objects.filter(employee=self.request.user.employee)
+        search_query = self.request.GET.get('search_query', '')
+        attendance_data = Attendance.objects.filter(employee=self.request.user.employee, date__contains=search_query)
+
+        return attendance_data
     
 
 class UserWorkHourView(ListView):
@@ -79,8 +84,9 @@ class UserWorkHourView(ListView):
     paginate_by = 10  
 
     def get_queryset(self):
-        return TotalWorkingHours.objects.filter(employee = self.request.user.employee)
-    
+        search_query = self.request.GET.get('search_query', '')
+        working_hour_data = TotalWorkingHours.objects.filter(employee=self.request.user.employee, date__contains=search_query)
+        return working_hour_data    
 
 
 

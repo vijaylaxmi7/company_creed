@@ -6,8 +6,8 @@
 
     {% block welcome %}{% endblock welcome %}
 
-    <h1>Check-In/Out Status</h1>
-    <form class="d-flex" role="search" action="{% url 'check-in-out' %}" method="GET">
+    <h1>Employee Work Hour Status</h1>
+    <form class="d-flex" role="search" action="{% url 'total-working-hours' %}" method="GET">
         {% csrf_token %}
         <div class="input-group">
             <input

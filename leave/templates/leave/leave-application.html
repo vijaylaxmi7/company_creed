@@ -2,6 +2,12 @@
  {% load static %}
  {% block task %}
  <link rel="stylesheet" href="{% static 'css/leave-apply.css'%}">
+ <style>
+    .button, input, select, textarea {
+        line-height: 1;
+        width: fit-content;
+    }
+</style>
  {%block welcome%}{%endblock welcome%}
     <section class="container">
         <div class="login-container">

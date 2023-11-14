@@ -7,8 +7,53 @@ from .forms import LeaveApplicationForm
 from django.http import HttpResponseRedirect, HttpResponse
 from .models import EmployeeLeave, LeaveBalance
 from django.core.mail import EmailMultiAlternatives
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import EmployeeLeave, LeaveBalance
+from datetime import datetime
+from users.models import Employee
+
 
 # Create your views here.
+
+
+def LeaveBalanceView(request):
+    leave_allowed = 18  
+    logged_in_user = request.user.employee
+
+    today = datetime.today()
+    month_start = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    
+    leave_records = EmployeeLeave.objects.filter(
+        employee=logged_in_user,
+        status='Approved',
+        start_date__month=month_start.month,
+        end_date__month=month_start.month
+    )
+    for leave_record in leave_records:
+        leave_taken = sum((leave_record.end_date - leave_record.start_date).total_seconds()) / (8 * 3600)  
+        leave_remain = leave_allowed - leave_taken
+         
+    leave_balance = LeaveBalance.objects.get(employee=logged_in_user, month=month_start)
+    if leave_balance:
+        leave_balance.leave_allowed = max(0, leave_remain)  
+        leave_balance.save()
+    else: 
+        leave_balance=LeaveBalance.objects.create(
+        employee=logged_in_user,
+        month=month_start,
+        leave_allowed=max(0, leave_remain), 
+        penalty=0
+        )
+        leave_balance.save()
+
+    context = {
+        'leave_allowed': leave_allowed,
+        'leave_taken': leave_taken,
+        'leave_remain': max(0, leave_remain), 
+    }
+
+    return render(request, 'leave/leave-balance.html', context)
 
 class LeaveApplication(View):
     form = LeaveApplicationForm
@@ -53,25 +98,25 @@ class MyLeave(ListView):
     model = EmployeeLeave
     template_name = 'leave/my-leave.html'
 
-def LeaveBalanceView(request):
+# def LeaveBalanceView(request):
 
-    leave_allowed = 18
-    loggedInUser = request.user.employee
-    print(loggedInUser)
-    leave_taken = EmployeeLeave.objects.filter(employee = loggedInUser, status = 'Approved')
-    print(leave_taken)
-    leave_remain = leave_allowed - leave_taken
-    leavebalance = LeaveBalance.objects.filter(employee = loggedInUser)
+#     leave_allowed = 18
+#     loggedInUser = request.user.employee
+#     print(loggedInUser)
+#     leave_taken = EmployeeLeave.objects.filter(employee = loggedInUser, status = 'Approved')
+#     print(leave_taken)
+#     leave_remain = leave_allowed - leave_taken
+#     leavebalance = LeaveBalance.objects.filter(employee = loggedInUser)
     
-    leavebalance.leave_taken = leave_taken
+#     leavebalance.leave_taken = leave_taken
     
-    context = {
-        'leave_allowed' : leave_allowed,
-        'leave_taken' : leave_taken,
-        'leave_remain' : leave_remain,
-    }
+#     context = {
+#         'leave_allowed' : leave_allowed,
+#         'leave_taken' : leave_taken,
+#         'leave_remain' : leave_remain,
+#     }
 
-    return render(request, 'leave/leave-balance.html', context)
+#     return render(request, 'leave/leave-balance.html', context)
 
 
 def LeaveApproveReject(request, id):
