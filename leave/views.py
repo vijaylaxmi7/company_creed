@@ -11,8 +11,8 @@ from django.shortcuts import render
 from django.db.models import Sum, F
 from .models import EmployeeLeave, LeaveBalance
 from datetime import datetime
+from .utils import leave_balance
 from users.models import Employee
-
 
 # Create your views here.
 
@@ -20,9 +20,13 @@ from users.models import Employee
 def LeaveBalanceView(request):
     leave_allowed = 18  
     logged_in_user = request.user.employee
+    print(logged_in_user)
 
     today = datetime.today()
+    print("today", today)
+
     month_start = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    print("month_start", month_start)
     
     leave_records = EmployeeLeave.objects.filter(
         employee=logged_in_user,
@@ -30,30 +34,33 @@ def LeaveBalanceView(request):
         start_date__month=month_start.month,
         end_date__month=month_start.month
     )
-    for leave_record in leave_records:
-        leave_taken = sum((leave_record.end_date - leave_record.start_date).total_seconds()) / (8 * 3600)  
-        leave_remain = leave_allowed - leave_taken
-         
-    leave_balance = LeaveBalance.objects.get(employee=logged_in_user, month=month_start)
-    if leave_balance:
-        leave_balance.leave_allowed = max(0, leave_remain)  
-        leave_balance.save()
-    else: 
-        leave_balance=LeaveBalance.objects.create(
-        employee=logged_in_user,
-        month=month_start,
-        leave_allowed=max(0, leave_remain), 
-        penalty=0
-        )
-        leave_balance.save()
+    print("Leave Records:", leave_records)
 
-    context = {
+    leave_taken = sum((leave_record.end_date - leave_record.start_date).days + 1 for leave_record in leave_records)
+    print("leave_taken", leave_taken)
+
+    leave_remain = max(0, leave_allowed - leave_taken)
+    print("leave_remain", leave_remain)
+
+    try:
+        leave_balance_instance = LeaveBalance.objects.get(employee=logged_in_user, month=month_start)
+        leave_balance_instance.leave_allowed = max(0, leave_remain)  
+        leave_balance_instance.save()
+        print("leave_balance_instance.leave_allowed", leave_balance_instance.leave_allowed)
+    except LeaveBalance.DoesNotExist:
+        LeaveBalance.objects.create(
+            employee=logged_in_user,
+            month=month_start,
+            leave_allowed=max(0, leave_remain), 
+            penalty=0
+        )
+
+    return render(request, 'leave/leave-balance.html', {
         'leave_allowed': leave_allowed,
         'leave_taken': leave_taken,
-        'leave_remain': max(0, leave_remain), 
-    }
-
-    return render(request, 'leave/leave-balance.html', context)
+        'leave_remain': leave_remain,
+        'month': month_start.strftime('%B, %Y')
+    })
 
 class LeaveApplication(View):
     form = LeaveApplicationForm

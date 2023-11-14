@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +31,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-import os
+
+
 
 
 # Application definition
@@ -144,8 +149,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 # EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'vijaylaxmi.borasi@codiatic.com'
-EMAIL_HOST_PASSWORD = 'gvcg jbxo tvzl hlej'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'users/static'),]
@@ -165,3 +170,8 @@ TIME_ZONE =  'Asia/Kolkata'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = False 
+
+if DEBUG:
+    STRIPE_PUBLISHABLE_KEY = 'test_publishable_key'
+    STRIPE_SECRET_KEY = 'test_secret_key'
+

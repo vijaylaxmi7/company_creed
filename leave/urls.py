@@ -11,7 +11,7 @@ urlpatterns = [
     path('manage-leave/', views.ManageLeaveApplication.as_view(), name="leave-manage"),
     path('leave-approve-reject/<int:id>/', views.LeaveApproveReject, name="leave-approve-reject"),
     path('leave-balance/', views.LeaveBalanceView, name='leave-balance'),
-    path('my-leave/', views.MyLeave.as_view(), name='my-leave')
+    path('my-leave/', views.MyLeave.as_view(), name='my-leave'),
 
 ]
 

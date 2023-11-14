@@ -1,10 +1,10 @@
-from django.db import models
+# from django.db import models
 
-# Create your models here.
+# # Create your models here.
 
 # from users.models import Employee
 # from leave.models import EmployeeLeave
-# from attendance.models import EmployeeAttendance
+# from attendance.models import Attendance
 
 # class Salary(models.Model):
 
@@ -20,6 +20,10 @@ from django.db import models
 #     date_of_payment = models.DateField()
 #     payslip_generation_date = models.DateTimeField()
 #     salary_deduction = models.IntegerField()
+
+# class SalarySlipGeneration(models.Modle):
+
+    
 
 
 

@@ -33,10 +33,9 @@ class EmployeeLeave(models.Model):
 class LeaveBalance(models.Model):
     
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    leave = models.ForeignKey(EmployeeLeave, on_delete=models.CASCADE)
     month = models.DateTimeField()
     penalty = models.IntegerField(default=0)
-    leave_allowed = models.IntegerField(default=18)
+    leave_allowed = models.IntegerField(default=0)
 
     
     

@@ -1,35 +1,30 @@
+{% extends 'users/base.html' %}
+{% load static %}
 
-        {%extends 'users/base.html'%}
-        {% load static %}
-        {% block task %}
-        <link rel="stylesheet" href="{% static 'css/my-task.css'%}">
+{% block task %}
+<link rel="stylesheet" href="{% static 'css/my-task.css' %}">
+
+{% block welcome %}{% endblock welcome %}
+
+<h1>Leave Balance</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th><b>Leave Allowed</b></th>
+            <th><b>Leave Taken</b></th>
+            <th><b>Leave Remain</b></th>
+        </tr>
+    </thead>
+    <tbody>
         
-        {%block welcome%}{%endblock welcome%}
+        <tr>
+            <td>{{ month }}</td>
+            <td>{{ leave_allowed }}</td>
+            <td>{{ leave_taken }}</td>
+            <td>{{ leave_remain }}</td>
+        </tr>
         
-            <h1>Leave Balance</h1>
-              <table>
-                <thead>
-                <tr>
-                  <th>Month</th>
-                  <th><b>Leave Allowed</b></th>
-                  <th><b>Leave Taken</b></th>
-                  <th><b>Leave Remain</b> </th>
-                  <th><b>Penalty</b></th>
-                  <th><b>Penalty</b></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for object in context %} 
-                <tr>
-                    <li>{{ object.leave_allowed}}</li> 
-                    <li> {{ object.leave_taken}}</li> 
-                    <li>{{ object.leave_remain}}</li> 
-                    <li>{{ object.penalty}}</li> 
-                    <li>{{ object.month}}</li> 
-                </tr>
-                {% endfor %}
-            </tbody>
-              </table>
-              {% endblock task %}
-        
-        
+    </tbody>
+</table>
+{% endblock task %}
