@@ -4,6 +4,7 @@ from django.views import View
 from django.views.generic.list import ListView
 from django.http import HttpResponse
 from .models import Attendance, TotalWorkingHours
+from django.db.models import Q
 from .utils import total_working_hour, total_working_hour_of_day
 
 import datetime
@@ -11,16 +12,16 @@ from datetime import datetime
 
 class CreateCheckInOutTimeView(View):
 
-    def get(self, request):
+    def post(self, request):
         
         if request.user.is_authenticated:
-            loggedInUser = request.user.employee  
-            is_entry = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
+            logged_in_user = request.user.employee  
+            is_entry = Attendance.objects.filter(employee=logged_in_user, date=datetime.today())
             if is_entry.exists():
                 is_entry = is_entry.last()
                 if is_entry.checkin_time and is_entry.checkout_time:
                     createCheckInTime = Attendance.objects.create(
-                        employee=loggedInUser,
+                        employee=logged_in_user,
                         checkin_time=timezone.now(),
                         date=datetime.today()
                     )
@@ -30,7 +31,7 @@ class CreateCheckInOutTimeView(View):
                     is_entry.save()
             else: 
                 createCheckInTime = Attendance.objects.create(
-                        employee=loggedInUser,
+                        employee=logged_in_user,
                         checkin_time=timezone.now(),
                         date=datetime.today()
                     )
@@ -50,7 +51,8 @@ class EmployeeCheckInOutView(ListView):
 
     def get_queryset(self):
         search_query = self.request.GET.get('search_query', '')
-        attendance_data = Attendance.objects.filter(date__contains=search_query)
+        attendance_data = Attendance.objects.filter(Q(date__contains=search_query) 
+                                                    |Q(employee__first_name__icontains = search_query))
         return attendance_data
         
 class EmployeeWorkingHourView(ListView):
@@ -63,7 +65,8 @@ class EmployeeWorkingHourView(ListView):
 
      def get_queryset(self):
         search_query = self.request.GET.get('search_query', '')
-        working_hour_data = TotalWorkingHours.objects.filter(date__contains=search_query)
+        working_hour_data = TotalWorkingHours.objects.filter(Q(date__contains=search_query) 
+                                                            |Q(employee__first_name__icontains = search_query))
         return working_hour_data
      
 class UserCheckInOutView(ListView):
@@ -77,7 +80,6 @@ class UserCheckInOutView(ListView):
 
         return attendance_data
     
-
 class UserWorkHourView(ListView):
     template_name = 'attendance/user-work-hour.html'
     context_object_name = 'work_hour'

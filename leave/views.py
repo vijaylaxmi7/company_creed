@@ -4,62 +4,45 @@ from django.template.loader import get_template
 from django.views import View
 from django.views.generic.list import ListView
 from .forms import LeaveApplicationForm
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from .models import EmployeeLeave, LeaveBalance
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render
-from django.db.models import Sum, F
 from .models import EmployeeLeave, LeaveBalance
 from datetime import datetime
-from .utils import leave_balance
-from users.models import Employee
+from .utils import total_leave_taken, leave_type
 
 # Create your views here.
 
-
 def LeaveBalanceView(request):
+
     leave_allowed = 18  
     logged_in_user = request.user.employee
-    print(logged_in_user)
-
     today = datetime.today()
-    print("today", today)
+    year_start = today.replace(month=1,day=1, hour=0, minute=0, second=0, microsecond=0)
+    leave_taken = total_leave_taken(request)   
+    leave_remain =  leave_allowed - leave_taken
+    leave_balance = LeaveBalance.objects.filter(employee=logged_in_user, month=year_start).first()
 
-    month_start = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    print("month_start", month_start)
-    
-    leave_records = EmployeeLeave.objects.filter(
-        employee=logged_in_user,
-        status='Approved',
-        start_date__month=month_start.month,
-        end_date__month=month_start.month
-    )
-    print("Leave Records:", leave_records)
-
-    leave_taken = sum((leave_record.end_date - leave_record.start_date).days + 1 for leave_record in leave_records)
-    print("leave_taken", leave_taken)
-
-    leave_remain = max(0, leave_allowed - leave_taken)
-    print("leave_remain", leave_remain)
-
-    try:
-        leave_balance_instance = LeaveBalance.objects.get(employee=logged_in_user, month=month_start)
-        leave_balance_instance.leave_allowed = max(0, leave_remain)  
-        leave_balance_instance.save()
-        print("leave_balance_instance.leave_allowed", leave_balance_instance.leave_allowed)
-    except LeaveBalance.DoesNotExist:
+    if leave_balance:
+        leave_balance.leave_allowed =  leave_remain
+        leave_balance.save()
+    else:
         LeaveBalance.objects.create(
-            employee=logged_in_user,
-            month=month_start,
-            leave_allowed=max(0, leave_remain), 
-            penalty=0
+        employee=logged_in_user,
+        month=year_start,
+        leave_allowed= leave_remain,
+        penalty=0
         )
 
     return render(request, 'leave/leave-balance.html', {
         'leave_allowed': leave_allowed,
         'leave_taken': leave_taken,
         'leave_remain': leave_remain,
-        'month': month_start.strftime('%B, %Y')
+        'casual_leave' : leave_type(request)[0],
+        'compoff_leave' : leave_type(request)[1],
+        'optional_leave' : leave_type(request)[2],
+        'paid_leave' : leave_type(request)[3],
     })
 
 class LeaveApplication(View):
@@ -72,8 +55,11 @@ class LeaveApplication(View):
     
     def post(self, request):
 
-        form = self.form(request.POST)
+        form = self.form(request.POST, request = request)
+        
         if form.is_valid():
+        
+           form.instance.employee = request.user.employee 
            type = form.cleaned_data['type']
            by = request.user.employee
            email = form.cleaned_data['manager']
@@ -95,40 +81,21 @@ class LeaveApplication(View):
            email.attach_alternative(html_content, 'text/html')
            email.send()
            form.save()
-
-           return HttpResponse('Email sent successfully')
+           
+           return HttpResponseRedirect('/leave/my-leave/')
         
         return render(request, self.template_name, {'form' : form})
     
-
 class MyLeave(ListView):
     model = EmployeeLeave
     template_name = 'leave/my-leave.html'
 
-# def LeaveBalanceView(request):
+class LeaveApproveRejectView(View):
 
-#     leave_allowed = 18
-#     loggedInUser = request.user.employee
-#     print(loggedInUser)
-#     leave_taken = EmployeeLeave.objects.filter(employee = loggedInUser, status = 'Approved')
-#     print(leave_taken)
-#     leave_remain = leave_allowed - leave_taken
-#     leavebalance = LeaveBalance.objects.filter(employee = loggedInUser)
-    
-#     leavebalance.leave_taken = leave_taken
-    
-#     context = {
-#         'leave_allowed' : leave_allowed,
-#         'leave_taken' : leave_taken,
-#         'leave_remain' : leave_remain,
-#     }
+    template_name = 'leave/manage-leave.html'
 
-#     return render(request, 'leave/leave-balance.html', context)
+    def post(self, request, id):
 
-
-def LeaveApproveReject(request, id):
-
-    if request.method == 'POST':
         leave_request = get_object_or_404(EmployeeLeave, id=id)
         print(leave_request)
         action = request.POST.get('action', '')
@@ -141,8 +108,7 @@ def LeaveApproveReject(request, id):
             leave_request.save()
             return HttpResponseRedirect('/leave/manage-leave/')
 
-    return render(request, 'leave/manage-leave.html')
-
+        return render(request, 'leave/manage-leave.html')
 
 class ManageLeaveApplication(ListView):
     model = EmployeeLeave

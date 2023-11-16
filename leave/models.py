@@ -29,7 +29,8 @@ class EmployeeLeave(models.Model):
     reason = models.TextField(max_length=500)
     start_date = models.DateField()
     end_date = models.DateField()
-  
+
+
 class LeaveBalance(models.Model):
     
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)

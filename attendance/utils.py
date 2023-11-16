@@ -4,8 +4,8 @@ import datetime
 from datetime import datetime
 
 def total_working_hour(request):
-    loggedInUser = request.user.employee
-    attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today()).last()
+    logged_in_user = request.user.employee
+    attendance = Attendance.objects.filter(employee=logged_in_user, date=datetime.today()).last()
     time_difference = timedelta(hours=0)
     
     if attendance.checkin_time and attendance.checkout_time:
@@ -23,8 +23,8 @@ def total_working_hour(request):
     return time_difference
 
 def total_working_hour_of_day(request):
-    loggedInUser = request.user.employee
-    attendance = Attendance.objects.filter(employee=loggedInUser, date=datetime.today())
+    logged_in_user = request.user.employee
+    attendance = Attendance.objects.filter(employee=logged_in_user, date=datetime.today())
     
     work_hours = timedelta(seconds=0)
     
@@ -33,13 +33,13 @@ def total_working_hour_of_day(request):
         if difference:
             work_hours += timedelta(seconds=difference.seconds)
 
-    is_entry = TotalWorkingHours.objects.filter(employee=loggedInUser, date=datetime.today()).first()
+    is_entry = TotalWorkingHours.objects.filter(employee=logged_in_user, date=datetime.today()).first()
 
     if is_entry:
         is_entry.work_hours = work_hours
         is_entry.save()
     else:
-        total_working_hours = TotalWorkingHours(employee=loggedInUser, work_hours=work_hours)
+        total_working_hours = TotalWorkingHours(employee=logged_in_user, work_hours=work_hours)
         total_working_hours.save()
 
     return work_hours

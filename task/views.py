@@ -26,27 +26,28 @@ class TaskAssignmentView(View):
 
         form = self.form(request.POST, request.FILES)
         if form.is_valid():
-                    task = form.cleaned_data['task']
-                    email = form.cleaned_data['employee']  
-                    project = form.cleaned_data['project']
-                    description = form.cleaned_data['description']
-                    start_date = form.cleaned_data['start_date']
-                    estimate_date = form.cleaned_data['estimate_date']
-                    file_attachment = form.cleaned_data['file_attachment']
-                    subject = "New Task Assignment."
-                    html_template = get_template('task/task-template.html')
-                    html_content = html_template.render({'task':task,'project': project ,'description' : description,'start_date': start_date, 'estimate_date': estimate_date,'file_attachment' : file_attachment})
-                    email = EmailMultiAlternatives(
-                            subject,
-                            'You have been assigned with new task.',
-                            settings.EMAIL_HOST_USER,
-                            [email],
-                        )
-                    email.content_subtype = 'html'
-                    email.attach_alternative(html_content, 'text/html')
-                    email.send()         
-                    form.save()
-                    return HttpResponseRedirect('/index/')
+            form.instance.employee = request.user.employee
+            task = form.cleaned_data['task']
+            email = form.cleaned_data['employee']  
+            project = form.cleaned_data['project']
+            description = form.cleaned_data['description']
+            start_date = form.cleaned_data['start_date']
+            estimate_date = form.cleaned_data['estimate_date']
+            file_attachment = form.cleaned_data['file_attachment']
+            subject = "New Task Assignment."
+            html_template = get_template('task/task-template.html')
+            html_content = html_template.render({'task':task,'project': project ,'description' : description,'start_date': start_date, 'estimate_date': estimate_date,'file_attachment' : file_attachment})
+            email = EmailMultiAlternatives(
+                    subject,
+                    'You have been assigned with new task.',
+                    settings.EMAIL_HOST_USER,
+                    [email],
+                )
+            email.content_subtype = 'html'
+            email.attach_alternative(html_content, 'text/html')
+            email.send()         
+            form.save()
+            return HttpResponseRedirect('/index/')
         
         return render(request, self.template_name, {'form' : form})
 
