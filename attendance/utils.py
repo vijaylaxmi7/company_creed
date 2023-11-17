@@ -2,6 +2,25 @@ from datetime import timedelta
 from .models import Attendance, TotalWorkingHours
 import datetime
 from datetime import datetime
+from django.shortcuts import get_object_or_404, render
+from django.db.models import Sum
+from users.models import Employee
+
+
+
+def calculate_total_working_hours(id):
+    
+    today = datetime.now().date()
+    first_day_of_month = today.replace(day=1)
+    working_hours_entries = TotalWorkingHours.objects.filter(
+        employee=id,
+        date__gte=first_day_of_month,
+        date__lte=today
+    )
+    total_working_hours_month = working_hours_entries.aggregate(Sum('work_hours'))['work_hours__sum'] 
+    print(total_working_hours_month)
+
+    return total_working_hours_month
 
 def total_working_hour(request):
     logged_in_user = request.user.employee
@@ -43,6 +62,8 @@ def total_working_hour_of_day(request):
         total_working_hours.save()
 
     return work_hours
+
+
     
 
         

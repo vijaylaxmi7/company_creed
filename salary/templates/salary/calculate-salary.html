@@ -1,0 +1,26 @@
+{%extends 'users/base.html'%}
+{% block task %}
+{%block welcome%}{%endblock welcome%}
+    {% load static %}
+    <form method = "POST">
+
+        <h2>Salary Slip</h2>
+    
+        <h3>Employee Information</h3>
+        <p>Name: {{ employee.first_name}} {{ employee.last_name}}</p>
+        <p>Employee ID: {{ employee.id }}</p>
+
+        <h3>Salary Details</h3>
+        <p>Basic Salary: ${{ basic_salary }}</p>
+        <p>Provident Fund: ${{ provident_fund }}</p>
+        <p>Allowance: ${{ allowance }}</p>
+        <p>Gross Salary: ${{ gross_salary }}</p>
+        <p>Salary Deduction: ${{ salary_deduction }}</p>
+        <p>Salary Period: {{ salary_period }}</p>
+
+        <h3>Salary Slip Generation Information</h3>
+        <p>Payslip Generation Date: {{ payslip_generation_date }}</p>
+        <p>Net Salary: ${{ net_salary }}</p>    
+    </form>
+  {% endblock task %}
+

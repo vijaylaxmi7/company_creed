@@ -60,6 +60,7 @@
     </a>
     {% if request.user.employee.is_manager %}
     <div id="leaveDropdown" class="dropdown-content">
+      <a href="{% url 'employee-list' %}">Employee list</a>
       <a href="{% url 'leave-application' %}">Apply Leaves</a>
       <a href="{% url 'my-leave' %}">My Leaves</a>
       <a href="{% url 'leave-balance' %}">Leave Balance</a>

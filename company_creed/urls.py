@@ -27,4 +27,5 @@ urlpatterns = [
     path('task/', include("task.urls")),
     path('attendance/', include("attendance.urls")),
     path('leave/', include("leave.urls")),
+    path('salary/', include("salary.urls")),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

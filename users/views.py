@@ -12,7 +12,6 @@ from users.models import Employee
 
 import datetime
 
-
 # Create your views here.
 
 class EmployeeSignupView(View):
@@ -83,6 +82,8 @@ def index(request):
         'greeting' : greeting}
     
     return render(request, "users/index.html", context)
+
+
 
 def Logout(request):
     logout(request)

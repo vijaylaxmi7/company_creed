@@ -32,7 +32,7 @@ class LeaveApplicationForm(forms.ModelForm):
             end_date = self.cleaned_data['end_date']
             leave_records = EmployeeLeave.objects.filter(employee = employee, start_date = start_date, end_date = end_date)
             if leave_records.exists():
-                raise forms.ValidationError("Leave is already applied on this dates.")
+                raise forms.ValidationError("Leave is already applied on these dates.")
 
 
 

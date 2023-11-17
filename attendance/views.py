@@ -5,7 +5,7 @@ from django.views.generic.list import ListView
 from django.http import HttpResponse
 from .models import Attendance, TotalWorkingHours
 from django.db.models import Q
-from .utils import total_working_hour, total_working_hour_of_day
+from .utils import total_working_hour, total_working_hour_of_day, calculate_total_working_hours
 
 import datetime
 from datetime import datetime
