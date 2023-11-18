@@ -6,8 +6,9 @@ from .utils import calculate_net_salary
 from django.shortcuts import render
 from .models import Salary
 from users.models import Employee
+from django.core.mail import EmailMultiAlternatives
 from datetime import datetime
-from .utils import calculate_gross_salary, calculate_net_salary, calculate_salary_deduction
+from .utils import calculate_gross_salary, calculate_net_salary, calculate_salary_deduction, send_salary_slip
 
 
 
@@ -20,6 +21,7 @@ class GenerateSalarySlip(View):
     def get(self, request, id):
         employee = get_object_or_404(Employee, id=id)
         salary_instance = Salary.objects.get(employee=employee)
+
         context = {
             'employee': employee,
             'basic_salary': salary_instance.basic_salary,
@@ -32,6 +34,7 @@ class GenerateSalarySlip(View):
             'payslip_generation_date': datetime.now(),  
             
         }
+        # send_salary_slip(id)
 
         return render(request, self.template_name, context)
     

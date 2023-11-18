@@ -175,3 +175,6 @@ if DEBUG:
     STRIPE_PUBLISHABLE_KEY = 'test_publishable_key'
     STRIPE_SECRET_KEY = 'test_secret_key'
 
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"

@@ -1,0 +1,17 @@
+<h3>Employee Information</h3>
+<p><strong>Name:</strong> {{ employee.first_name }} {{ employee.last_name }}</p>
+<p><strong>Employee ID:</strong> {{ employee.id }}</p>
+<hr>
+<h3>Salary Details</h3>
+<ul>
+  <li><strong>Basic Salary:</strong> ₹{{ basic_salary }}</li>
+  <li><strong>Provident Fund:</strong> ₹{{ provident_fund }}</li>
+  <li><strong>Allowance:</strong> ₹{{ allowance }}</li>
+  <li><strong>Gross Salary:</strong> ₹{{ gross_salary }}</li>
+  <li><strong>Salary Deduction:</strong> ₹{{ salary_deduction }}</li>
+  <li><strong>Salary Period:</strong> {{ salary_period }}</li>
+</ul>
+<hr>
+<h3>Salary Slip Generation Information</h3>
+        <p><strong>Payslip Generation Date:</strong> {{ payslip_generation_date }}</p>
+        <p><strong>Net Salary:</strong> ₹{{ net_salary }}</p>
