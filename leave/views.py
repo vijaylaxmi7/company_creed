@@ -5,44 +5,44 @@ from django.views import View
 from django.views.generic.list import ListView
 from .forms import LeaveApplicationForm
 from django.http import HttpResponseRedirect
-from .models import EmployeeLeave, LeaveBalance
+from .models import EmployeeLeave
 from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render
-from .models import EmployeeLeave, LeaveBalance
 from datetime import datetime
 from .utils import total_leave_taken, leave_type
 
 # Create your views here.
 
 def LeaveBalanceView(request):
-
-    leave_allowed = 18  
     logged_in_user = request.user.employee
     today = datetime.today()
-    year_start = today.replace(month=1,day=1, hour=0, minute=0, second=0, microsecond=0)
-    leave_taken = total_leave_taken(request)   
-    leave_remain =  leave_allowed - leave_taken
-    leave_balance = LeaveBalance.objects.filter(employee=logged_in_user, month=year_start).first()
+    year_start = today.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+    leave_taken = total_leave_taken(request)
+    leave_remain = logged_in_user.annual_leave - leave_taken
+
+    leave_balance = EmployeeLeave.objects.filter(
+        employee=logged_in_user,
+        start_date__month=year_start.month  
+    ).first()
 
     if leave_balance:
-        leave_balance.leave_allowed =  leave_remain
+        leave_balance.leave_allowed = leave_remain
         leave_balance.save()
     else:
-        LeaveBalance.objects.create(
-        employee=logged_in_user,
-        month=year_start,
-        leave_allowed= leave_remain,
-        penalty=0
+        EmployeeLeave.objects.create(
+            employee=logged_in_user,
+            start_date=year_start,
         )
-
     return render(request, 'leave/leave-balance.html', {
-        'leave_allowed': leave_allowed,
+        'annual_leave': logged_in_user.annual_leave,
         'leave_taken': leave_taken,
         'leave_remain': leave_remain,
-        'casual_leave' : leave_type(request)[0],
-        'compoff_leave' : leave_type(request)[1],
-        'optional_leave' : leave_type(request)[2],
-        'paid_leave' : leave_type(request)[3],
+        'casual_leave': leave_type(request)[0],
+        'compoff_leave': leave_type(request)[1],
+        'optional_leave': leave_type(request)[2],
+        'paid_leave': leave_type(request)[3],
+        'leave_month': leave_balance.start_date.strftime("%B"),  
+        
     })
 
 class LeaveApplication(View):

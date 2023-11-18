@@ -1,7 +1,6 @@
 from .models import EmployeeLeave
 from datetime import datetime
-from django.contrib import messages
-    
+
 def total_leave_taken(request): 
     
     logged_in_user = request.user.employee
@@ -21,29 +20,41 @@ def total_leave_taken(request):
 def leave_type(request):
 
     logged_in_user = request.user.employee
-    casual_leave_taken = EmployeeLeave.objects.filter(
-        employee = logged_in_user,
-        status='Approved',
-        type = 'CASUAL LEAVE'
-    ).count()
 
-    compoff_leave_taken = EmployeeLeave.objects.filter(
-        employee = logged_in_user,
-        status='Approved',
-        type = 'COMPOFF'
-    ).count()
+    casual_leave_taken = sum(
+        (leave.end_date - leave.start_date).days + 1
+        for leave in EmployeeLeave.objects.filter(
+            employee=logged_in_user,
+            status='Approved',
+            type='CASUAL LEAVE'
+        )
+    )
 
-    optional_leave_taken = EmployeeLeave.objects.filter(
-        employee = logged_in_user,
-        status='Approved',
-        type = 'OPTIONAL LEAVE'
-    ).count()
+    compoff_leave_taken = sum(
+        (leave.end_date - leave.start_date).days + 1
+        for leave in EmployeeLeave.objects.filter(
+            employee=logged_in_user,
+            status='Approved',
+            type='COMPOFF'
+        )
+    )
 
-    paid_leave_taken = EmployeeLeave.objects.filter(
-        employee = logged_in_user,
-        status='Approved',
-        type = 'PAID_LEAVE'
-    ).count()
+    optional_leave_taken = sum(
+        (leave.end_date - leave.start_date).days + 1
+        for leave in EmployeeLeave.objects.filter(
+            employee=logged_in_user,
+            status='Approved',
+            type='OPTIONAL LEAVE'
+        )
+    )
+
+    paid_leave_taken = sum(
+        (leave.end_date - leave.start_date).days + 1
+        for leave in EmployeeLeave.objects.filter(
+            employee=logged_in_user,
+            status='Approved',
+            type='PAID_LEAVE'
+        )
+    )
 
     return casual_leave_taken, compoff_leave_taken, optional_leave_taken, paid_leave_taken
-

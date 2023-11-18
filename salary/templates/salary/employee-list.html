@@ -27,7 +27,7 @@
             <tr>
                 <th>ID</th>
                 <th>Employee</th>
-                <th>Calculate Salary</th>
+                <th>Generate Salary Slip</th>
             </tr>
         </thead>
         <tbody>
@@ -36,10 +36,7 @@
                     <td>{{ data.id }}</td>
                     <td>{{ data.employee.first_name }}</td>
                     <td>
-                        <a href="{% url 'calculate-salary' data.employee.id %}">
-                            <button>Calculate</button>
-                        </a>
-                        <a href="">
+                        <a href="{% url 'generate-salary-slip' data.employee.id %}">
                             <button>Generate Slip</button>
                         </a>
                     </td>

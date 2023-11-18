@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
 
-    path('calculate-salary/<int:id>/', views.CalculateSalary.as_view(), name= "calculate-salary"),
+    path('generate-salary-slip/<int:id>/', views.GenerateSalarySlip.as_view(), name= "generate-salary-slip"),
     path('employee-list/', views.EmployeeListView.as_view(), name='employee-list')
 
 ]

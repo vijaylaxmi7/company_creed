@@ -3,9 +3,9 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic.list import ListView
 from django.http import HttpResponse
-from .models import Attendance, TotalWorkingHours
+from .models import Attendance, DailyWorkingHours
 from django.db.models import Q
-from .utils import total_working_hour, total_working_hour_of_day, calculate_total_working_hours
+from .utils import total_time_difference, total_working_hour_of_day
 
 import datetime
 from datetime import datetime
@@ -36,7 +36,7 @@ class CreateCheckInOutTimeView(View):
                         date=datetime.today()
                     )
                 createCheckInTime.save()
-            total_working_hour(request)
+            total_time_difference(request)
             total_working_hour_of_day(request)
             return HttpResponse('success')
         
@@ -57,15 +57,14 @@ class EmployeeCheckInOutView(ListView):
         
 class EmployeeWorkingHourView(ListView):
      
-     model = TotalWorkingHours
+     model = DailyWorkingHours
      fields = ['employee','date', 'work_hours']
      template_name = 'attendance/total-working-hours.html'
      paginate_by = 5
-     ordering = ['-date']
 
      def get_queryset(self):
         search_query = self.request.GET.get('search_query', '')
-        working_hour_data = TotalWorkingHours.objects.filter(Q(date__contains=search_query) 
+        working_hour_data = DailyWorkingHours.objects.filter(Q(date__contains=search_query) 
                                                             |Q(employee__first_name__icontains = search_query))
         return working_hour_data
      
@@ -87,7 +86,7 @@ class UserWorkHourView(ListView):
 
     def get_queryset(self):
         search_query = self.request.GET.get('search_query', '')
-        working_hour_data = TotalWorkingHours.objects.filter(employee=self.request.user.employee, date__contains=search_query)
+        working_hour_data = DailyWorkingHours.objects.filter(employee=self.request.user.employee, date__contains=search_query)
         return working_hour_data    
 
 

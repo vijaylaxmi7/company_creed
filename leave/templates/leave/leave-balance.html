@@ -10,31 +10,46 @@
 <table>
     <thead>
         <tr>
-            <th><b>Leave Allowed</b></th>
+            <th><b> Annual Leave Allowed</b></th>
             <th><b>Leave Taken</b></th>
             <th><b>Leave Remain</b></th>
             <th><b>Casual Leave </b></th>
             <th><b>Compoff Leave </b></th>
             <th><b>Optional Leave </b></th>
             <th><b>Paid Leave </b></th>
-            
-
+            <th><b>Leave Month</b></th>
         </tr>
     </thead>
     <tbody>
-        
         <tr>
-            <td>{{ leave_allowed }}</td>
+            <td>{{ annual_leave }}</td>
             <td>{{ leave_taken }}</td>
             <td>{{ leave_remain }}</td>
             <td>{{ casual_leave }}</td>
             <td>{{ compoff_leave }}</td>
             <td>{{ optional_leave }}</td>
             <td>{{ paid_leave }}</td>
-
-
+            <td>{{ leave_month }}</td>
         </tr>
-        
     </tbody>
 </table>
+
+{% if leave_records %}
+    <h2>Leave Details</h2>
+    <table>
+        <thead>
+            <tr>
+                <th><b>Start Date</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in leave_records %}
+                <tr>
+                    <td>{{ record.start_date|date:"F d, Y" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
 {% endblock task %}

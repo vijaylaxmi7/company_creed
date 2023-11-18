@@ -12,7 +12,7 @@ class Attendance(models.Model):
     time_difference = models.DurationField(null=True)
     
 
-class TotalWorkingHours(models.Model):
+class DailyWorkingHours(models.Model):
     
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     work_hours = models.DurationField()    
