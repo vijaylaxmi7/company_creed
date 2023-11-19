@@ -1,0 +1,65 @@
+{% extends 'users/base.html' %}
+{% load static %}
+
+{% block task %}
+    <link rel="stylesheet" href="{% static 'css/my-task.css' %}">
+
+    {% block welcome %}{% endblock welcome %}
+
+    <h1>Salary Slip</h1>
+
+    <form class="d-flex" role="search" action="{% url 'user-salary-slip' %}" method="GET">
+        {% csrf_token %}
+        <div class="input-group">
+            <input
+                class="form-control me-2"
+                type="search"
+                placeholder="Search"
+                name="search_query"
+                required aria-label="Search"
+                style="width: 300px"
+            >
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </div>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Gross Salary</th>
+            <th>Deduction</th>
+            <th>Net Salary</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in salary %}
+            <tr>
+                <td>{{ data.payslip_generation_date }}</td>
+                <td>{{ data.gross_salary }}</td>
+                <td>{{ data.salary_deduction }}</td>
+                <td>{{ data.net_salary }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+{% endblock task %}

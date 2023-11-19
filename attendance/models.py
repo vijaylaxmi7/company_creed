@@ -16,7 +16,7 @@ class DailyWorkingHours(models.Model):
     
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     work_hours = models.DurationField()    
-    date = models.DateField(null=True, auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
 
 
 

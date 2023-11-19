@@ -8,25 +8,23 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("task", "0001_initial"),
+        ("attendance", "0001_initial"),
         ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="task",
+            model_name="dailyworkinghours",
             name="employee",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE, to="users.employee"
             ),
         ),
         migrations.AddField(
-            model_name="task",
-            name="manager",
+            model_name="attendance",
+            name="employee",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="manager",
-                to="users.employee",
+                on_delete=django.db.models.deletion.CASCADE, to="users.employee"
             ),
         ),
     ]

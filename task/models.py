@@ -13,7 +13,7 @@ class Task(models.Model):
     ]
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    manager = models.ForeignKey(Employee, on_delete=models.CASCADE,related_name='manager', null=True)
+    manager = models.ForeignKey(Employee, on_delete=models.CASCADE,related_name='manager')
     task = models.CharField(max_length=50)
     project = models.CharField(max_length=50)
     status = models.CharField(max_length=20, choices=TASK_STATUS)

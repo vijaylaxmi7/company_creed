@@ -16,7 +16,6 @@ def calculate_total_working_hours(id):
         date__lte=today
     )
     total_working_hours_month = working_hours_entries.aggregate(Sum('work_hours'))['work_hours__sum'] 
-    print(total_working_hours_month)
 
     return total_working_hours_month
 

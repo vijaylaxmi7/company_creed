@@ -60,7 +60,6 @@
     </a>
     {% if request.user.employee.is_manager %}
     <div id="leaveDropdown" class="dropdown-content">
-      <a href="{% url 'employee-list' %}">Employee list</a>
       <a href="{% url 'leave-application' %}">Apply Leaves</a>
       <a href="{% url 'my-leave' %}">My Leaves</a>
       <a href="{% url 'leave-balance' %}">Leave Balance</a>
@@ -74,9 +73,20 @@
     </div>
     {% endif %}
 
+    {% if request.user.employee.is_manager %}
+    <a href="{% url 'employee-list' %}">
+      <span class="glyphicon glyphicon-user"></span> Employee list
+    </a>
+   
+    <a href="{% url 'make-payment' %}">
+      <span class="glyphicon glyphicon-log-in"></span> Pay
+    </a>
+    {% endif %}
+    
     <a href="/logout/" onmouseenter="dashboardFunction()">
       <span class="glyphicon glyphicon-log-in"></span> Logout
     </a>
+
 
   </div>
 
@@ -128,6 +138,7 @@
               {% comment %} max-height: 60px; border-radius: 25px;" src = "{{request.user.employee.profile_pic.url}}"></div></center> {% endcomment %}
                     <a href="{% url 'edit-profile' request.user.employee.id %}">Edit Profile</a>
                     <li><a href="/password_reset/"><span class=""></span>Reset password</a></li>
+                    <li><a href="{%url 'user-salary-slip'%}"><span class=""></span>Salary slip</a></li>
                     <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
                 </div>
             </div>

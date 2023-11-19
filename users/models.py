@@ -16,7 +16,7 @@ class CustomUser(AbstractUser):
     gender = models.CharField(max_length=20, choices= GENDER_CHOICE)
     contact_no = models.CharField(max_length=15)
     address = models.TextField(max_length=200)
-    date_of_birth = models.DateField(null=True,blank=True)
+    date_of_birth = models.DateField(null=True)
     city = models.CharField(max_length=30, null=True)
     state = models.CharField(max_length=30, null=True)
 
@@ -48,7 +48,7 @@ class Employee(CustomUser):
     profile_pic = models.ImageField(upload_to='profile_pics', default='default.jpg')
     technology = models.ManyToManyField(Technology)
     designation = models.ForeignKey(Designation, null=True, on_delete=models.SET_NULL)
-    year_of_experience = models.IntegerField(default=0, null=True)
+    year_of_experience = models.IntegerField(default=0)
     joining_date = models.DateField(null=True)
     annual_leave = models.PositiveIntegerField(default=0)
     id_proof = models.CharField(max_length=50, choices=ID_PROOF_CHOICE, null=True)

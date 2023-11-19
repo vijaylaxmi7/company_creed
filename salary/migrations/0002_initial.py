@@ -8,25 +8,30 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("task", "0001_initial"),
+        ("salary", "0001_initial"),
         ("users", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="task",
+            model_name="salaryslipgeneration",
             name="employee",
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE, to="users.employee"
             ),
         ),
         migrations.AddField(
-            model_name="task",
-            name="manager",
+            model_name="salary",
+            name="employee",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE, to="users.employee"
+            ),
+        ),
+        migrations.AddField(
+            model_name="bankaccountdetail",
+            name="employee",
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="manager",
-                to="users.employee",
+                on_delete=django.db.models.deletion.CASCADE, to="users.employee"
             ),
         ),
     ]

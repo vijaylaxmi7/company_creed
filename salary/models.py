@@ -1,13 +1,15 @@
 from django.db import models
 from users.models import Employee
+from django.utils import timezone
 
 class Salary(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE)
     basic_salary = models.DecimalField(max_digits=20, decimal_places=2)
+    hra = models.DecimalField(max_digits=20, decimal_places=2)
     provident_fund = models.DecimalField(max_digits=20, decimal_places=2)
     allowance = models.DecimalField(max_digits=20, decimal_places=2)
     tax_rate = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
-    salary_period = models.CharField(max_length=20)  
+
 
 class BankAccountDetail(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
@@ -20,8 +22,8 @@ class BankAccountDetail(models.Model):
 
 class SalarySlipGeneration(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    gross_salary = models.DecimalField(max_digits=20, decimal_places=2, null=True)
+    gross_salary = models.DecimalField(max_digits=20, decimal_places=2)
     net_salary = models.DecimalField(max_digits=20, decimal_places=2, null=True)
-    salary_deduction = models.DecimalField(max_digits=20, decimal_places=2, null=True)
-    payslip_generation_date = models.DateTimeField(null=True)
-    remarks = models.TextField(blank=True)
+    salary_deduction = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    payslip_generation_date = models.DateTimeField(default=timezone.now)
+    

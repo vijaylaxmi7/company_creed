@@ -10,14 +10,11 @@ from datetime import datetime
 from decimal import Decimal
 
 
-
-
-
 def send_salary_slip(id):
     employee = get_object_or_404(Employee, id = id)
     salary_instance = Salary.objects.get(employee=employee)
     subject = "Salary Slip"
-    html_template = get_template('salary/slip-template.html')
+    html_template = get_template('salary/salary-slip-template.html')
     html_content = html_template.render({'employee': employee,
             'basic_salary': salary_instance.basic_salary,
             'provident_fund': salary_instance.provident_fund,
@@ -25,7 +22,6 @@ def send_salary_slip(id):
             'gross_salary': calculate_gross_salary(id),
             'salary_deduction': calculate_salary_deduction(id),
             'net_salary':calculate_net_salary(id) ,
-            'salary_period': salary_instance.salary_period,
             'payslip_generation_date': datetime.now(),})
     email = EmailMultiAlternatives(
             subject,
@@ -33,7 +29,7 @@ def send_salary_slip(id):
             settings.EMAIL_HOST_USER,
             [employee.email],
         )
-    # email.content_subtype = 'html_template'
+    email.content_subtype = 'html_template'
 
     email.attach_alternative(html_content, 'text/html')
     email.send()     
@@ -58,10 +54,8 @@ def calculate_salary_deduction(id):
         
         salary_deduction = salary_slip.salary_deduction
         salary_slip.save()
-        print(salary_slip.salary_deduction)
         return salary_deduction
-    else:
-        return 0
+   
 
 def calculate_net_salary(id):
     salary_slip = SalarySlipGeneration.objects.filter(employee=id).first()
@@ -70,7 +64,6 @@ def calculate_net_salary(id):
     
     if salary_slip:
         salary_slip.net_salary = gross_salary - salary_deduction
-        print(salary_slip.net_salary)
         salary_slip.save()
         return salary_slip.net_salary
     else:
