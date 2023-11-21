@@ -9,7 +9,7 @@ class GenerateSalarySlipCronJob(CronJobBase):
 
 
     schedule = Schedule(run_every_mins=RUN_EVERY_MN)
-    code = 'salary.generate_salary_slip_cron_job'  
+    code = 'salary.GenerateSalarySlipCronJob'  
 
     def do(self):
         print('send')

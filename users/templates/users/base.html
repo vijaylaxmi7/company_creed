@@ -44,7 +44,6 @@
     </a>
     {% if request.user.employee.is_manager %}
     <div id="taskDropdown" class="dropdown-content">
-      <a href="#">Assign calls</a>
       <a href="{% url 'task-assignment' %}">Assign tasks</a>
       <a href="{% url 'view-task' %}">View assigned Task</a>
       <a href="{% url 'my-task' %}">View tasks</a>
@@ -73,18 +72,14 @@
     </div>
     {% endif %}
 
-    {% if request.user.employee.is_manager %}
+    {% if request.user.employee.designation.name == 'Accountant' %}
     <a href="{% url 'employee-list' %}">
-      <span class="glyphicon glyphicon-user"></span> Employee list
-    </a>
-   
-    <a href="{% url 'make-payment' %}">
-      <span class="glyphicon glyphicon-log-in"></span> Pay
+      <span class="glyphicon glyphicon-user"></span> Generate Salary Slip
     </a>
     {% endif %}
     
     <a href="/logout/" onmouseenter="dashboardFunction()">
-      <span class="glyphicon glyphicon-log-in"></span> Logout
+      <span class="glyphicon glyphicon-log-in"></span> Logout 
     </a>
 
 
@@ -137,7 +132,7 @@
             {% comment %} <center><div class="user-circle"><img  style = " {% endcomment %}
               {% comment %} max-height: 60px; border-radius: 25px;" src = "{{request.user.employee.profile_pic.url}}"></div></center> {% endcomment %}
                     <a href="{% url 'edit-profile' request.user.employee.id %}">Edit Profile</a>
-                    <li><a href="/password_reset/"><span class=""></span>Reset password</a></li>
+                    {% comment %} <li><a href="{%url 'password_reset'%}"><span class=""></span>Reset password</a></li>  {% endcomment %}
                     <li><a href="{%url 'user-salary-slip'%}"><span class=""></span>Salary slip</a></li>
                     <li><a href="/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
                 </div>
@@ -166,6 +161,9 @@
     
     {% block task %}
     {% endblock task %}
+
+    {% block salary %}
+    {% endblock salary %}
   </div>
 
 
@@ -233,3 +231,25 @@
 
 </body>
 </html>
+
+
+
+
+
+<script>
+    function createSalaryCheckoutSession() {
+        const employeeId = 1;
+        fetch(`/create_salary_checkout_session/${employeeId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie("csrftoken"), 
+            },
+        })
+        .then(response => response.json())
+        .then(session => {
+            stripe.redirectToCheckout({ sessionId: session.id });
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>

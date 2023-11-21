@@ -7,7 +7,8 @@ urlpatterns = [
     path('employee-list/', views.EmployeeListView.as_view(), name='employee-list'),
     path('download-salary-slip/<int:id>/',views.DownloadSalarySlipView.as_view(), name='download_salary_slip'),
     path('user-salary-slip/', views.UserSalarySlipView.as_view(), name='user-salary-slip'),
-    path('make-payment/', views.make_payment, name="make-payment")
+    path('create-payment/<int:id>/', views.CreatePayment.as_view(), name='create-payment'),
+    path('success-page/', views.success_page, name='success_page'),
 
 ]
 

@@ -6,8 +6,8 @@
 
     {% block welcome %}{% endblock welcome %}
 
-    <h1>Employee Check-In/Out Status</h1>
-    <form class="d-flex" role="search" action="{% url 'check-in-out' %}" method="GET">
+    <h1>Employee Salary</h1>
+    <form class="d-flex" role="search" action="{% url 'employee-list' %}" method="GET">
         {% csrf_token %}
         <div class="input-group">
             <input
@@ -38,6 +38,9 @@
                     <td>
                         <a href="{% url 'generate-salary-slip' data.employee.id %}">
                             <button>Generate Slip</button>
+                        </a>
+                        <a href="{% url 'create-payment' request.user.employee.id %}">
+                            <button>Pay Salary</button>
                         </a>
                     </td>
                 </tr>

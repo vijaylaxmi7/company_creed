@@ -26,4 +26,7 @@ class SalarySlipGeneration(models.Model):
     net_salary = models.DecimalField(max_digits=20, decimal_places=2, null=True)
     salary_deduction = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     payslip_generation_date = models.DateTimeField(default=timezone.now)
-    
+    stripe_payment_intent = models.CharField(max_length=200, default= False)
+    paid = models.BooleanField(default=False, verbose_name='Payment Status')
+
+   

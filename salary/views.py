@@ -1,16 +1,16 @@
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic.list import ListView
 from .utils import calculate_net_salary
-from django.shortcuts import render
 from .models import Salary
+from .forms import PaymentForm
 from users.models import Employee
 from .models import SalarySlipGeneration
 from django.template.loader import get_template
 from django.http import HttpResponse
 from datetime import datetime
-from .forms import PaymentForm
+from django.http import JsonResponse
 from .utils import calculate_gross_salary, calculate_net_salary, calculate_salary_deduction, send_salary_slip
 import stripe
 from django.conf import settings
@@ -19,25 +19,51 @@ from django.conf import settings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-def make_payment(request):
-    if request.method == 'POST':
+class CreatePayment(View):
+    template_name = 'salary/make-payment.html'
+
+    def get(self, request, id):
+        employee = Employee.objects.get(pk=id)
+
+        if not employee.stripe_customer_id:
+            customer = stripe.Customer.create(email=employee.email)
+            employee.stripe_customer_id = customer.id
+            employee.save()
+
+        return render(request, self.template_name, {'employee': employee})
+
+    def post(self, request, id):
+        employee = Employee.objects.get(pk=id)
         form = PaymentForm(request.POST)
+
         if form.is_valid():
-            employee = form.cleaned_data['employee']
-            amount = form.cleaned_data['amount']
-
-            payment_intent = stripe.PaymentIntent.create(
-                amount=int(amount * 100),  
+            intent = stripe.PaymentIntent.create(
+                customer=employee.stripe_customer_id,
+                payment_method="pm_card_visa",
+                amount=1000,  
                 currency='usd',
+                confirm=True,
+                return_url = 'http://127.0.0.1:8000/salary/success-page/'
             )
-            SalarySlipGeneration.objects.create(employee=employee, amount=amount)
-            
-            client_secret = payment_intent.client_secret
-            return render(request, 'salary/success.html', {'client_secret': client_secret})
-    else:
-        form = PaymentForm()
 
-    return render(request, 'salary/make-payment.html', {'form': form})
+            return redirect('success_page')
+
+        salary_slip = SalarySlipGeneration.objects.create(
+            employee=employee,
+            gross_salary=1000,  
+            net_salary=900, 
+            salary_deduction=100, 
+            stripe_payment_intent=intent.id,
+            paid=True
+        )
+
+        salary_slip.save()
+
+        return render(request, self.template_name, {'employee': employee, 'form': form})
+
+def success_page(request):
+    return render(request, 'salary/success.html')
+
 
 class GenerateSalarySlip(View):
 
@@ -62,7 +88,6 @@ class GenerateSalarySlip(View):
 
         return render(request, self.template_name, context)
     
-
 class DownloadSalarySlipView(View):
     def get(self, request, id):
         employee = get_object_or_404(Employee, id=id)

@@ -51,6 +51,7 @@ class Employee(CustomUser):
     year_of_experience = models.IntegerField(default=0)
     joining_date = models.DateField(null=True)
     annual_leave = models.PositiveIntegerField(default=0)
+    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
     id_proof = models.CharField(max_length=50, choices=ID_PROOF_CHOICE, null=True)
     id_proof_file = models.FileField(upload_to='documents/', null=True)
 
@@ -73,8 +74,7 @@ class Employee(CustomUser):
 
 
 
-# def technology_id(self):
-#         return self.technologies
+
     
     
 

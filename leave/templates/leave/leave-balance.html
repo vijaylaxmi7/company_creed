@@ -17,7 +17,7 @@
             <th><b>Compoff Leave </b></th>
             <th><b>Optional Leave </b></th>
             <th><b>Paid Leave </b></th>
-            <th><b>Leave Month</b></th>
+            {% comment %} <th><b>Leave Month</b></th> {% endcomment %}
         </tr>
     </thead>
     <tbody>
@@ -29,7 +29,7 @@
             <td>{{ compoff_leave }}</td>
             <td>{{ optional_leave }}</td>
             <td>{{ paid_leave }}</td>
-            <td>{{ leave_month }}</td>
+            {% comment %} <td>{{ leave_month }}</td> {% endcomment %}
         </tr>
     </tbody>
 </table>

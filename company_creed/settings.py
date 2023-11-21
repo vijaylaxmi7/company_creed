@@ -172,8 +172,8 @@ USE_L10N = True
 USE_TZ = False 
 
 if DEBUG:
-    STRIPE_PUBLISHABLE_KEY = 'test_publishable_key'
-    STRIPE_SECRET_KEY = 'test_secret_key'
+    STRIPE_PUBLISHABLE_KEY = os.getenv('PUBLISHABLE_KEY')
+    STRIPE_SECRET_KEY = os.getenv('SECRET_KEY')
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
