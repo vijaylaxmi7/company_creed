@@ -9,4 +9,10 @@ class PaymentForm(forms.ModelForm):
     class Meta:
         model = SalarySlipGeneration
         fields = ['employee', 'net_salary']
+
+class AccountCreationForm(forms.ModelForm):
+
+    class Meta:
+        model = SalarySlipGeneration
+        fields = ['employee']
        

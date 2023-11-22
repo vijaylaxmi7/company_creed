@@ -5,7 +5,7 @@ from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from .utils import calculate_net_salary
 from .models import Salary
-from .forms import PaymentForm
+from .forms import PaymentForm, AccountCreationForm
 from users.models import Employee
 from .models import SalarySlipGeneration
 from django.template.loader import get_template
@@ -19,37 +19,30 @@ from django.conf import settings
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-class CreatePayment(View):
-    template_name = 'salary/make-payment.html'
 
-    def get(self, request, id):
-        employee = Employee.objects.get(pk=id)
+class CreateAccount(View):
+    template_name = "salary/create-account.html"
+    form = AccountCreationForm()
 
-        if not employee.stripe_customer_id:
-            customer = stripe.Customer.create(email=employee.email)
-            employee.stripe_customer_id = customer.id
-            employee.save()
-
-        return render(request, self.template_name, {'employee': employee})
-
-    def post(self, request, id):
-        employee = Employee.objects.get(pk=id)
-        form = PaymentForm(request.POST)
+    def get(self, request):
+        return render(request, self.template_name)
+    
+    def post(self,request):
+        employee = Employee.objects.get(id)
+        form = self.form(request.POST)
 
         if form.is_valid():
-            amount = form.cleaned_data['net_salary']
-            intent = stripe.PaymentIntent.create(
-                customer=employee.stripe_customer_id,
-                payment_method="pm_card_visa",
-                amount=amount,  
-                currency='usd',
-                confirm=True,
-                return_url = 'http://127.0.0.1:8000/salary/success-page/'
+            account_creation = stripe.Account.create(
+                type = 'custom',
+                country = 'India',
+                email = employee.email,
+                capabilities={
+                    "card_payments": {"requested": True},
+                    "transfers": {"requested": True},
+                },
             )
-
             return redirect('success_page')
-
-        return render(request, self.template_name, {'employee': employee, 'form': form})
+        return render(request, self.template_name)
 
 def success_page(request):
     return render(request, 'salary/success.html')
