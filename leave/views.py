@@ -13,8 +13,6 @@ from .utils import total_leave_taken, leave_type
 
 # Create your views here.
 
-
-
 class LeaveApplication(View):
     form = LeaveApplicationForm
     template_name = 'leave/leave-application.html'
@@ -59,6 +57,13 @@ class LeaveApplication(View):
 class MyLeave(ListView):
     model = EmployeeLeave
     template_name = 'leave/my-leave.html'
+
+    def get_queryset(self):
+        employee = self.request.user.employee
+        leave_data = EmployeeLeave.objects.filter(
+            employee=employee,
+        )
+        return leave_data
 
 
 def LeaveBalanceView(request):

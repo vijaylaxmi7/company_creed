@@ -37,7 +37,7 @@
                 <td>{{ data.id }}</td>
                 <td>{{ data.employee.first_name }}</td>
                 <td>{{ data.date }}</td>
-                <td>{{ data.work_hours }}</td>
+                <td>{{ data.work_hours|floatformat:2 }} hours</td>
             </tr>
         {% endfor %}
         </tbody>

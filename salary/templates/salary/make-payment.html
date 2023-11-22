@@ -6,9 +6,9 @@
 
 <h2>Salary Payment</h2>
 
-<form  method="post" id="payment-form">
+<form  method="post" >
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Submit Payment</button>
+    <button type="submit">Make Payment</button>
   </form>
 {% endblock content %}

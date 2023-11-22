@@ -2,6 +2,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic.list import ListView
+from django.views.generic import TemplateView
 from .utils import calculate_net_salary
 from .models import Salary
 from .forms import PaymentForm
@@ -10,7 +11,6 @@ from .models import SalarySlipGeneration
 from django.template.loader import get_template
 from django.http import HttpResponse
 from datetime import datetime
-from django.http import JsonResponse
 from .utils import calculate_gross_salary, calculate_net_salary, calculate_salary_deduction, send_salary_slip
 import stripe
 from django.conf import settings
@@ -37,10 +37,11 @@ class CreatePayment(View):
         form = PaymentForm(request.POST)
 
         if form.is_valid():
+            amount = form.cleaned_data['net_salary']
             intent = stripe.PaymentIntent.create(
                 customer=employee.stripe_customer_id,
                 payment_method="pm_card_visa",
-                amount=1000,  
+                amount=amount,  
                 currency='usd',
                 confirm=True,
                 return_url = 'http://127.0.0.1:8000/salary/success-page/'
@@ -48,21 +49,11 @@ class CreatePayment(View):
 
             return redirect('success_page')
 
-        salary_slip = SalarySlipGeneration.objects.create(
-            employee=employee,
-            gross_salary=1000,  
-            net_salary=900, 
-            salary_deduction=100, 
-            stripe_payment_intent=intent.id,
-            paid=True
-        )
-
-        salary_slip.save()
-
         return render(request, self.template_name, {'employee': employee, 'form': form})
 
 def success_page(request):
     return render(request, 'salary/success.html')
+
 
 
 class GenerateSalarySlip(View):
@@ -120,15 +111,13 @@ class UserSalarySlipView(ListView):
     template_name = 'salary/list-salary-slip.html'
     model = SalarySlipGeneration
     context_object_name = 'salary'
-    paginate_by = 10  
 
     def get_queryset(self):
-        search_query = self.request.GET.get('search_query', '')
         employee = self.request.user.employee
-        working_hour_data = SalarySlipGeneration.objects.filter(
+        salary_data = SalarySlipGeneration.objects.filter(
             employee=employee,
         )
-        return working_hour_data
+        return salary_data
 
 
 

@@ -2,12 +2,100 @@
 
 {% block title %}Company Creed{% endblock %}
 
-<!-- {%block head%}
-{% load static %}
-  <link rel="stylesheet" href="{% static 'users/index.css'%}">
-{%endblock%} -->
-  
-  
-</body>
 
-</html>
+{% load static %}
+  <link rel="stylesheet" href="{% static 'css/task.css'%}">
+
+{% block task %}
+{% load static %}
+
+    <div id="timestamp" class="timestamp-container">
+      <p class="timestamp-text">{{ current_datetime }}</p>
+  
+      <p class="welcome-text">{{ greeting }}, {{ request.user.employee.first_name }} {{ request.user.employee.last_name }}</p>
+      <div class="check-in-out">
+        <button id="checkInOutButton" class="btn btn-primary" onclick="toggleCheckInOut()" data-action="check-in">Check In</button>
+        <span id="checkInOuttimer" style="display:none"></span>
+    </div>
+
+<p id="checkInTime"></p>
+<p id="totalTime"></p>
+
+<script>
+
+  function getCookie(c_name) {
+    if(document.cookie.length > 0) {
+        c_start = document.cookie.indexOf(c_name + "=");
+        if(c_start != -1) {
+            c_start = c_start + c_name.length + 1;
+            c_end = document.cookie.indexOf(";", c_start);
+            if(c_end == -1) c_end = document.cookie.length;
+            return unescape(document.cookie.substring(c_start,c_end));
+        }
+    }
+    return "";
+}
+
+let checkInTime; 
+
+let stopwatchInterval;
+
+function startStopwatch() {
+    checkInTime = new Date().getTime();
+    stopwatchInterval = setInterval(updateStopwatch, 1000);
+}
+
+function updateStopwatch() {
+    const currentTime = new Date().getTime();
+    const elapsedTime = currentTime - checkInTime;
+
+    const minutes = Math.floor(elapsedTime / (1000 * 60));
+    const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+
+    document.getElementById('checkInTime').textContent = `Check In Time: ${minutes}m ${seconds}s`;
+}
+
+function toggleCheckInOut() {
+    const button = document.getElementById('checkInOutButton');
+    const action = button.dataset.action;
+    const url = action === 'check-in' ? "{% url 'check-in' %}" : "{% url 'check-out' %}";
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie("csrftoken")
+        }
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log(data);
+
+        const checkInTimeElement = document.getElementById('checkInTime');
+        const totalTimeElement = document.getElementById('totalTime');
+
+        if (action === 'check-in') {
+            button.textContent = 'Check Out';
+            button.dataset.action = 'check-out';
+            startStopwatch();
+        } else {
+            button.textContent = 'Check In';
+            button.dataset.action = 'check-in';
+            const checkOutTime = new Date();
+            const totalTime = (checkOutTime - checkInTime) / 1000;
+            const hours = Math.floor(totalTime / 3600);
+            const minutes = Math.floor((totalTime % 3600) / 60);
+            const seconds = Math.floor(totalTime % 60);
+            totalTimeElement.textContent = `Total Time: ${hours}h ${minutes}m ${seconds}sec`;
+            
+            clearInterval(stopwatchInterval);
+            checkInTimeElement.textContent = '';
+        }
+
+        localStorage.setItem('checkInOutState', button.dataset.action);
+    });
+}
+
+
+
+</script>
+{% endblock task %}

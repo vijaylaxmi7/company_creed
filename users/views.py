@@ -9,8 +9,10 @@ from django.views.generic.edit import UpdateView
 
 from users.forms import EmployeeSignupForm, EmployeeSigninForm
 from users.models import Employee
+from attendance.models import Attendance
 
 import datetime
+from datetime import datetime
 
 # Create your views here.
 
@@ -68,7 +70,7 @@ class EditProfileView(UpdateView):
     
 def index(request):
     
-    now = datetime.datetime.now()
+    now = timezone.now()
     hour = now.hour
     if hour < 12:
         greeting = "Good Morning"
@@ -78,12 +80,14 @@ def index(request):
         greeting = "Good Evening"
     current_datetime = timezone.now().strftime("%I:%M%p on %B %d, %Y")
     context = {
+        }
+
+    context = {
         'current_datetime': current_datetime,
-        'greeting' : greeting}
-    
+        'greeting' : greeting,
+    }
+
     return render(request, "users/index.html", context)
-
-
 
 def Logout(request):
     logout(request)

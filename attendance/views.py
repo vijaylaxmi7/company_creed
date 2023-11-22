@@ -52,7 +52,7 @@ class EmployeeCheckInOutView(ListView):
     def get_queryset(self):
         search_query = self.request.GET.get('search_query', '')
         attendance_data = Attendance.objects.filter(Q(date__contains=search_query) 
-                                                    |Q(employee__first_name__icontains = search_query))
+                                                    |Q(employee__first_name__icontains = search_query)).order_by('-date')
         return attendance_data
         
 class EmployeeWorkingHourView(ListView):
@@ -65,7 +65,7 @@ class EmployeeWorkingHourView(ListView):
      def get_queryset(self):
         search_query = self.request.GET.get('search_query', '')
         working_hour_data = DailyWorkingHours.objects.filter(Q(date__contains=search_query) 
-                                                            |Q(employee__first_name__icontains = search_query))
+                                                            |Q(employee__first_name__icontains = search_query)).order_by('-date')
         return working_hour_data
      
 class UserCheckInOutView(ListView):
@@ -75,7 +75,15 @@ class UserCheckInOutView(ListView):
 
     def get_queryset(self):
         search_query = self.request.GET.get('search_query', '')
-        attendance_data = Attendance.objects.filter(employee=self.request.user.employee, date__contains=search_query)
+        attendance_data = Attendance.objects.filter(employee=self.request.user.employee, date__contains=search_query).order_by('-date')
+
+        for obj in attendance_data:
+            if obj.time_difference is not None:
+                hours, remainder = divmod(obj.time_difference.seconds, 3600)
+                minutes = remainder//60
+                obj.time_difference = f"{hours} hr {minutes} min"
+            else:
+                obj.time_difference = "Not available"
 
         return attendance_data
     
@@ -86,8 +94,14 @@ class UserWorkHourView(ListView):
 
     def get_queryset(self):
         search_query = self.request.GET.get('search_query', '')
-        working_hour_data = DailyWorkingHours.objects.filter(employee=self.request.user.employee, date__contains=search_query)
-        return working_hour_data    
+        working_hour_data = DailyWorkingHours.objects.filter(employee=self.request.user.employee, date__contains=search_query).order_by('-date')
+        for obj in working_hour_data:
+            hours, remainder = divmod(obj.work_hours.seconds, 3600)
+            minutes = remainder//60
+            obj.work_hours = f"{hours} hr {minutes} min"
+        return working_hour_data
+    
+         
 
 
 

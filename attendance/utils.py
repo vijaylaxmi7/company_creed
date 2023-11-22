@@ -5,6 +5,8 @@ from datetime import datetime
 from django.shortcuts import get_object_or_404, render
 from django.db.models import Sum
 from users.models import Employee
+from django import template
+register = template.Library()
 
 def calculate_total_working_hours(id):
     
@@ -28,8 +30,8 @@ def total_time_difference(request):
         in_time = attendance.checkin_time
         out_time = attendance.checkout_time
 
-        in_time_delta = timedelta(hours=in_time.hour, minutes=in_time.minute, seconds=in_time.second)
-        out_time_delta = timedelta(hours=out_time.hour, minutes=out_time.minute, seconds=out_time.second)
+        in_time_delta = timedelta(hours=in_time.hour, minutes=in_time.minute)
+        out_time_delta = timedelta(hours=out_time.hour, minutes=out_time.minute)
 
         time_difference = out_time_delta - in_time_delta
 
@@ -59,6 +61,30 @@ def total_working_hour_of_day(request):
         total_working_hours.save()
 
     return work_hours
+
+@register.filter()
+def smooth_timedelta(timedeltaobj):
+
+    secs = timedeltaobj.total_seconds()
+    timetot = ""
+    if secs > 86400: # 60sec * 60min * 24hrs
+        days = secs // 86400
+        timetot += "{} days".format(int(days))
+        secs = secs - days*86400
+
+    if secs > 3600:
+        hrs = secs // 3600
+        timetot += " {} hours".format(int(hrs))
+        secs = secs - hrs*3600
+
+    if secs > 60:
+        mins = secs // 60
+        timetot += " {} minutes".format(int(mins))
+        secs = secs - mins*60
+
+    if secs > 0:
+        timetot += " {} seconds".format(int(secs))
+    return timetot
 
 
     
