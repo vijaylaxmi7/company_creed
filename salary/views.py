@@ -5,7 +5,8 @@ from django.views.generic.list import ListView
 from django.views.generic import TemplateView
 from .utils import calculate_net_salary
 from .models import Salary
-from .forms import PaymentForm, AccountCreationForm
+from .forms import AccountCreationForm
+from django.http import JsonResponse
 from users.models import Employee
 from .models import SalarySlipGeneration
 from django.template.loader import get_template
@@ -20,34 +21,60 @@ from django.conf import settings
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-class CreateAccount(View):
+class CreateCustomer(View):
     template_name = "salary/create-account.html"
-    form = AccountCreationForm()
+    form_class = AccountCreationForm  
 
     def get(self, request):
-        return render(request, self.template_name)
-    
-    def post(self,request):
-        employee = Employee.objects.get(id)
-        form = self.form(request.POST)
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
 
+    def post(self, request):
+        form = self.form_class(request.POST)
         if form.is_valid():
-            account_creation = stripe.Account.create(
-                type = 'custom',
-                country = 'India',
-                email = employee.email,
-                capabilities={
-                    "card_payments": {"requested": True},
-                    "transfers": {"requested": True},
-                },
-            )
-            return redirect('success_page')
-        return render(request, self.template_name)
+            email = form.cleaned_data['employee']
+            try:
+                customer = stripe.Customer.create(
+                email=email,
+                payment_method="pm_card_visa",
+                invoice_settings={"default_payment_method": "pm_card_visa"},
+                )
+                employee = Employee.objects.get(id = email.id)
+                employee.stripe_customer_id = customer.id
+                employee.save()
+                return JsonResponse({'status': 'success', 'message': 'Customer created successfully'})
+            except stripe.error.StripeError as e:
+                return JsonResponse({'status': 'error', 'message': str(e)})
+        return render(request, self.template_name, {'form': form})
+    
+
+class CreateCheckoutSession(View):
+    template_name = "salary/create-checkout-session.html"
+    form_class = AccountCreationForm  
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['employee']
+            try:
+                session = stripe.checkout.Session.create(
+                    payment_method_types=['card'],
+                    mode='setup',
+                    customer=email.stripe_customer_id, 
+                    success_url='https://example.com/success?session_id={CHECKOUT_SESSION_ID}',
+                    cancel_url='https://example.com/cancel',
+                )
+                return JsonResponse({'status': 'success', 'message': 'Checkout session created successfully', 'session_id': session.id, 'payout' : payout.id})
+            except stripe.error.StripeError as e:
+                return JsonResponse({'status': 'error', 'message': str(e)})
+        return render(request, self.template_name, {'form': form})
 
 def success_page(request):
     return render(request, 'salary/success.html')
-
-
 
 class GenerateSalarySlip(View):
 

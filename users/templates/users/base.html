@@ -74,6 +74,14 @@
     </div>
     {% endif %}
 
+    <a href="{% url 'create-customer' %}">
+      <span class="glyphicon glyphicon"></span> Customer Creation
+    </a>
+
+    <a href="{% url 'creat-checkout-session' %}">
+      <span class="glyphicon glyphicon"></span> Make Payment
+    </a>
+
     {% if request.user.employee.designation.name == 'Accountant' %}
     <a href="{% url 'employee-list' %}">
       <span class="glyphicon glyphicon-user"></span> Generate Salary Slip

@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <title>Checkout</title>
+  </head>
+  <body>
+    <form  method="POST">
+        {{form}}
+        {% csrf_token %}
+      <button type="submit">Checkout</button>
+    </form>
+  </body>
+</html>

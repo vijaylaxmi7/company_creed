@@ -173,7 +173,7 @@ USE_TZ = False
 
 if DEBUG:
     STRIPE_PUBLISHABLE_KEY = os.getenv('PUBLISHABLE_KEY')
-    STRIPE_SECRET_KEY = os.getenv('SECRET_KEY')
+    STRIPE_SECRET_KEY =  "sk_test_51OCK67SBvNwsGDsdMUPEOojXkx0ZPN7YeIaWzZbukZRwo4EdvMxnuJ8Q93BLYRor17OeWXihoYTlNHp7V7F9lD3H00NaqU2AB8"
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://localhost:6379/0'

@@ -77,6 +77,8 @@ function toggleCheckInOut() {
             button.textContent = 'Check Out';
             button.dataset.action = 'check-out';
             startStopwatch();
+            totalTimeElement.textContent = '';
+
         } else {
             button.textContent = 'Check In';
             button.dataset.action = 'check-in';
@@ -85,7 +87,7 @@ function toggleCheckInOut() {
             const hours = Math.floor(totalTime / 3600);
             const minutes = Math.floor((totalTime % 3600) / 60);
             const seconds = Math.floor(totalTime % 60);
-            totalTimeElement.textContent = `Total Time: ${hours}h ${minutes}m ${seconds}sec`;
+            totalTimeElement.textContent = `Logging Duration: ${hours}h ${minutes}m ${seconds}sec`;
             
             clearInterval(stopwatchInterval);
             checkInTimeElement.textContent = '';
